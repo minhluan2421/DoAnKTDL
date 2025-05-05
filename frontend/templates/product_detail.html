@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product[1] }}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .product-detail {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .product-image {
+            max-width: 400px;
+            border-radius: 8px;
+        }
+
+        .product-info {
+            max-width: 500px;
+        }
+
+        .product-info h1 {
+            font-size: 2rem;
+            color: #007bff;
+        }
+
+        .product-info p {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+
+        .product-info .price {
+            font-size: 1.5rem;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .product-info .buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .product-info .buttons a {
+            display: inline-block;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .product-info .buy-now {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .product-info .buy-now:hover {
+            background-color: #0056b3;
+        }
+
+        .product-info .add-to-cart {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .product-info .add-to-cart:hover {
+            background-color: #1e7e34;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Product Details</h1>
+    </header>
+    <main>
+        <div class="product-detail">
+            <img src="/{{ product[4] }}" alt="{{ product[1] }}" class="product-image">
+            <div class="product-info">
+                <h1>{{ product[1] }}</h1>
+                <p>Category: {{ product[2] }}</p>
+                <p class="price">{{ product[3] }}$</p>
+                <p class="description">{{ product[5] }}</p>
+                <div class="buttons">
+                    <a href="#" class="buy-now">Mua ngay</a>
+                    <a href="#" class="add-to-cart">Thêm vào giỏ hàng</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

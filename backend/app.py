@@ -30,6 +30,21 @@ def recommendations():
         })
 
     return render_template('recommendations.html', recommendations=recommendations)
+@app.route('/category/<category>')
+def category(category):
+    # Lấy danh sách sản phẩm theo danh mục
+    from database.db_connection import get_products_by_category
+    products = get_products_by_category(category)
+    return render_template('category.html', category=category, products=products)
+
+@app.route('/product/<int:product_id>')
+def product_detail(product_id):
+    from database.db_connection import get_product_by_id
+    product = get_product_by_id(product_id)
+    if product:
+        return render_template('product_detail.html', product=product)
+    else:
+        return "Product not found", 404
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)

@@ -18,3 +18,25 @@ def get_products():
     products = cursor.fetchall()
     conn.close()
     return products
+
+def get_products_by_category(category):
+    conn = get_connection()
+    cursor = conn.cursor()
+    query = "SELECT ProductName, Price, ImagePath FROM Products WHERE Category = ?"
+    cursor.execute(query, (category,))
+    products = cursor.fetchall()
+    conn.close()
+    return products
+
+def get_product_by_id(product_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    query = """
+        SELECT ProductID, ProductName, Category, Price, ImagePath, Description
+        FROM Products
+        WHERE ProductID = ?
+    """
+    cursor.execute(query, (product_id,))
+    product = cursor.fetchone()
+    conn.close()
+    return product

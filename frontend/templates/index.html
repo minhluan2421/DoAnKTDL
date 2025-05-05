@@ -6,19 +6,145 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Electronics Store</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        /* Custom styles for the index page */
+        nav ul {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            gap: 15px;
+        }
+
+        nav ul li {
+            margin: 0;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #0056b3;
+        }
+
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .product-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            margin: 10px 0;
+            color: #007bff;
+        }
+
+        .product-price {
+            font-size: 1rem;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .product-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .product-actions a {
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .product-actions .add-to-cart {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .product-actions .add-to-cart:hover {
+            background-color: #e0a800;
+        }
+
+        .product-actions .buy-now {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .product-actions .buy-now:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
 <body>
     <header>
-        <h1>Electronics Store</h1>
+        <h1>Welcome to Electronics Store</h1>
     </header>
     <main>
+        <nav>
+            <ul>
+                <li><a href="/category/Laptop">Laptops</a></li>
+                <li><a href="/category/Smartphone">Phones</a></li>
+                <li><a href="/category/Tablet">Tablets</a></li>
+                <li><a href="/category/Accessories">Accessories</a></li>
+                <li><a href="/category/Smartwatch">Smartwatches</a></li>
+                <li><a href="/category/Headphones">Headphones</a></li>
+                <li><a href="/category/Camera">Cameras</a></li>
+                <li><a href="/category/TV">TVs</a></li>
+                <li><a href="/category/Action Camera">Action Cameras</a></li>
+                <li><a href="/category/Drone">Drones</a></li>
+                <li><a href="/category/Game Console">Game Consoles</a></li>
+            </ul>
+        </nav>
         <div class="product-list">
             {% for product in products %}
             <div class="product-card">
-                <img src="/{{ product[2] }}" alt="{{ product[0] }}" class="product-image">
+                <a href="/product/{{ product[0] }}">
+                    <img src="/{{ product[2] }}" alt="{{ product[0] }}" class="product-image">
+                </a>
                 <h2 class="product-name">{{ product[0] }}</h2>
                 <p class="product-price">{{ product[1] }}$</p>
+                <div class="product-actions">
+                    <a href="#" class="add-to-cart">
+                        <i class="fas fa-shopping-cart"></i> Thêm vào giỏ hàng
+                    </a>
+                    <a href="#" class="buy-now">Mua ngay</a>
+                </div>
             </div>
             {% endfor %}
         </div>

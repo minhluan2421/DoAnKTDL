@@ -19,10 +19,36 @@ header h1 {
     font-size: 2.5rem;
 }
 
-.product-list {
+nav ul {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    gap: 15px;
+}
+
+nav ul li {
+    margin: 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    background-color: #007bff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+nav ul li a:hover {
+    background-color: #0056b3;
+}
+
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
     padding: 20px;
 }
@@ -32,7 +58,6 @@ header h1 {
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 250px;
     text-align: center;
     padding: 15px;
     transition: transform 0.2s, box-shadow 0.2s;
@@ -60,4 +85,45 @@ header h1 {
     font-size: 1rem;
     color: #28a745;
     font-weight: bold;
+}
+
+.product-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.product-actions a {
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.product-actions .add-to-cart {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.product-actions .add-to-cart:hover {
+    background-color: #e0a800;
+}
+
+.product-actions .buy-now {
+    background-color: #007bff;
+    color: white;
+}
+
+.product-actions .buy-now:hover {
+    background-color: #0056b3;
+}
+
+footer {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #f4f4f9;
+    color: #666;
+    margin-top: 20px;
 }
