@@ -14,25 +14,33 @@ def get_connection():
 def get_products():
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT ProductName, Price, ImagePath FROM Products")
+    cursor.execute("SELECT ProductID, ProductName, Price, ImagePath FROM Products")
     products = cursor.fetchall()
     conn.close()
+    # Thêm tiền tố 'static/' vào đường dẫn ảnh
+    products = [
+        (product[0], product[1], product[2], f"static/{product[3]}") for product in products
+    ]
     return products
 
 def get_products_by_category(category):
     conn = get_connection()
     cursor = conn.cursor()
-    query = "SELECT ProductName, Price, ImagePath FROM Products WHERE Category = ?"
+    query = "SELECT ProductID, ProductName, Price, ImagePath FROM Products WHERE Category = ?"
     cursor.execute(query, (category,))
     products = cursor.fetchall()
     conn.close()
+    # Thêm tiền tố 'static/' vào đường dẫn ảnh
+    products = [
+        (product[0], product[1], product[2], f"/static/{product[3]}") for product in products
+    ]
     return products
 
 def get_product_by_id(product_id):
     conn = get_connection()
     cursor = conn.cursor()
     query = """
-        SELECT ProductID, ProductName, Category, Price, ImagePath, Description
+        SELECT ProductID, ProductName, Price, ImagePath, Description
         FROM Products
         WHERE ProductID = ?
     """

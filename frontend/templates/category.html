@@ -4,21 +4,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Category: {{ category }}</title>
+    <title>Danh mục: {{ category }}</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .product-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
+            color: #007bff;
+            margin: 10px 0;
+        }
+
+        .product-name a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .product-price {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .product-actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .product-actions a {
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-to-cart {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .add-to-cart:hover {
+            background-color: #e0a800;
+        }
+
+        .buy-now {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .buy-now:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
 <body>
     <header>
-        <h1>Category: {{ category }}</h1>
+        <h1>Danh mục: {{ category }}</h1>
     </header>
     <main>
         <div class="product-list">
             {% for product in products %}
             <div class="product-card">
-                <img src="/{{ product[2] }}" alt="{{ product[0] }}" class="product-image">
-                <h2 class="product-name">{{ product[0] }}</h2>
-                <p class="product-price">{{ product[1] }}$</p>
+                <a href="/product/{{ product[0] }}">
+                    <img src="{{ product[3] }}" alt="{{ product[1] }}" class="product-image">
+                </a>
+                <h2 class="product-name">
+                    <a href="/product/{{ product[0] }}">{{ product[1] }}</a>
+                </h2>
+                <p class="product-price">{{ "{:,.0f}".format(product[2]) }}₫</p>
+                <div class="product-actions">
+                    <a href="#" class="add-to-cart">Thêm vào giỏ hàng</a>
+                    <a href="#" class="buy-now">Mua ngay</a>
+                </div>
             </div>
             {% endfor %}
         </div>

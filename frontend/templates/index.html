@@ -2,76 +2,108 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Electronics Store</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css" />
     <style>
-        /* Custom styles for the index page */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+
+        header {
+            background-color: #3f8efc;
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
         nav ul {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             list-style: none;
             padding: 0;
-            margin: 20px 0;
-            gap: 15px;
-        }
-
-        nav ul li {
-            margin: 0;
+            margin: 25px 10px;
+            gap: 12px;
         }
 
         nav ul li a {
             text-decoration: none;
             color: white;
-            background-color: #007bff;
-            padding: 10px 20px;
-            border-radius: 5px;
+            background-color: #3f8efc;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 500;
             transition: background-color 0.3s ease;
         }
 
         nav ul li a:hover {
-            background-color: #0056b3;
+            background-color: #306fc7;
         }
 
         .product-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            padding: 30px;
         }
 
         .product-card {
             background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
             text-align: center;
-            padding: 15px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
         }
 
         .product-image {
             width: 100%;
-            height: auto;
-            border-radius: 8px;
+            max-height: 220px;
+            object-fit: cover;
+            border-radius: 10px;
             margin-bottom: 15px;
         }
 
         .product-name {
-            font-size: 1.2rem;
-            margin: 10px 0;
-            color: #007bff;
+            font-size: 1.3rem;
+            margin: 12px 0;
+            color: #3f8efc;
+            font-weight: 600;
+        }
+
+        .product-name a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .product-name a:hover {
+            text-decoration: underline;
         }
 
         .product-price {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: #28a745;
             font-weight: bold;
         }
@@ -79,21 +111,23 @@
         .product-actions {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
         }
 
         .product-actions a {
             text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 5px;
+            padding: 10px 16px;
+            border-radius: 6px;
             font-size: 1rem;
+            font-weight: 500;
             transition: background-color 0.3s ease;
         }
 
         .product-actions .add-to-cart {
             background-color: #ffc107;
-            color: #333;
+            color: #212529;
         }
 
         .product-actions .add-to-cart:hover {
@@ -101,12 +135,12 @@
         }
 
         .product-actions .buy-now {
-            background-color: #007bff;
+            background-color: #3f8efc;
             color: white;
         }
 
         .product-actions .buy-now:hover {
-            background-color: #0056b3;
+            background-color: #306fc7;
         }
     </style>
 </head>
@@ -131,18 +165,19 @@
                 <li><a href="/category/Game Console">Game Consoles</a></li>
             </ul>
         </nav>
+
         <div class="product-list">
             {% for product in products %}
             <div class="product-card">
                 <a href="/product/{{ product[0] }}">
-                    <img src="/{{ product[2] }}" alt="{{ product[0] }}" class="product-image">
+                    <img src="{{ product[3] }}" alt="{{ product[1] }}" class="product-image">
                 </a>
-                <h2 class="product-name">{{ product[0] }}</h2>
-                <p class="product-price">{{ product[1] }}$</p>
+                <h2 class="product-name">
+                    <a href="/product/{{ product[0] }}">{{ product[1] }}</a>
+                </h2>
+                <p class="product-price">{{ "{:,.0f}".format(product[2]) }}₫</p>
                 <div class="product-actions">
-                    <a href="#" class="add-to-cart">
-                        <i class="fas fa-shopping-cart"></i> Thêm vào giỏ hàng
-                    </a>
+                    <a href="#" class="add-to-cart">Thêm vào giỏ hàng</a>
                     <a href="#" class="buy-now">Mua ngay</a>
                 </div>
             </div>
