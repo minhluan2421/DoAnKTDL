@@ -131,3 +131,75 @@ footer {
     margin-top: 40px;
     font-size: 0.95rem;
 }
+
+/* Thêm vào cuối file style.css */
+.sidebar {
+    width: 250px;
+    background-color: #ffffff;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    padding-top: 100px;
+    z-index: 100;
+    overflow-y: auto;
+}
+
+.sidebar-title {
+    padding: 15px 20px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #3f8efc;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.sidebar-menu li a {
+    display: block;
+    padding: 12px 20px;
+    color: #555;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.sidebar-menu li a:hover {
+    background-color: #f5f9ff;
+    color: #3f8efc;
+    padding-left: 25px;
+}
+
+.sidebar-menu li a.active {
+    background-color: #e6f0ff;
+    color: #3f8efc;
+    border-left: 4px solid #3f8efc;
+}
+
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding-top: 20px;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+}

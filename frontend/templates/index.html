@@ -2,95 +2,149 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Electronics Store</title>
-    <link rel="stylesheet" href="/static/css/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh mục: {{ category }}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
     <style>
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f2f5;
+            background-color: #f4f6f9;
             color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background-color: #2c3e50;
+            color: white;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            background-color: #1a252f;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.3rem;
+            margin: 0;
+            color: #ecf0f1;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 0;
+        }
+
+        .sidebar-menu li {
+            position: relative;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #bdc3c7;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu li a:hover {
+            background-color: #34495e;
+            color: #ecf0f1;
+            padding-left: 25px;
+        }
+
+        .sidebar-menu li a.active {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .sidebar-menu li a i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        .sidebar-menu li a .badge {
+            margin-left: auto;
+            background-color: #e74c3c;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 20px;
         }
 
         header {
-            background-color: #3f8efc;
+            background-color: #007bff;
             color: white;
-            padding: 25px 0;
+            padding: 20px 0;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 2.5rem;
-        }
-
-        nav ul {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            list-style: none;
-            padding: 0;
-            margin: 25px 10px;
-            gap: 12px;
-        }
-
-        nav ul li a {
-            text-decoration: none;
-            color: white;
-            background-color: #3f8efc;
-            padding: 10px 18px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
             border-radius: 8px;
-            font-weight: 500;
-            transition: background-color 0.3s ease;
         }
 
-        nav ul li a:hover {
-            background-color: #306fc7;
+        h1 {
+            margin: 0;
+            font-size: 2rem;
         }
 
         .product-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px;
-            padding: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
         }
 
         .product-card {
-            background-color: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
-            text-align: center;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             padding: 20px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
 
         .product-image {
             width: 100%;
-            max-height: 220px;
-            object-fit: cover;
+            height: 180px;
+            object-fit: contain;
             border-radius: 10px;
             margin-bottom: 15px;
         }
 
         .product-name {
-            font-size: 1.3rem;
-            margin: 12px 0;
-            color: #3f8efc;
-            font-weight: 600;
+            font-size: 1.1rem;
+            color: #007bff;
+            margin: 10px 0;
         }
 
         .product-name a {
@@ -98,92 +152,126 @@
             text-decoration: none;
         }
 
-        .product-name a:hover {
-            text-decoration: underline;
-        }
-
         .product-price {
-            font-size: 1.1rem;
             color: #28a745;
             font-weight: bold;
+            font-size: 1rem;
         }
 
         .product-actions {
+            margin-top: 15px;
             display: flex;
             justify-content: center;
-            gap: 12px;
-            margin-top: 20px;
-            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .product-actions a {
             text-decoration: none;
             padding: 10px 16px;
             border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 500;
+            font-size: 0.95rem;
             transition: background-color 0.3s ease;
         }
 
-        .product-actions .add-to-cart {
+        .add-to-cart {
             background-color: #ffc107;
-            color: #212529;
+            color: #333;
         }
 
-        .product-actions .add-to-cart:hover {
+        .add-to-cart:hover {
             background-color: #e0a800;
         }
 
-        .product-actions .buy-now {
-            background-color: #3f8efc;
+        .buy-now {
+            background-color: #007bff;
             color: white;
         }
 
-        .product-actions .buy-now:hover {
-            background-color: #306fc7;
+        .buy-now:hover {
+            background-color: #0056b3;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                padding: 15px;
+            }
         }
     </style>
+    <!-- Thêm Font Awesome cho icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
-    <header>
-        <h1>Welcome to Electronics Store</h1>
-    </header>
-    <main>
-        <nav>
-            <ul>
-                <li><a href="/category/Laptop">Laptops</a></li>
-                <li><a href="/category/Smartphone">Phones</a></li>
-                <li><a href="/category/Tablet">Tablets</a></li>
-                <li><a href="/category/Accessories">Accessories</a></li>
-                <li><a href="/category/Smartwatch">Smartwatches</a></li>
-                <li><a href="/category/Headphones">Headphones</a></li>
-                <li><a href="/category/Camera">Cameras</a></li>
-                <li><a href="/category/TV">TVs</a></li>
-                <li><a href="/category/Action Camera">Action Cameras</a></li>
-                <li><a href="/category/Drone">Drones</a></li>
-                <li><a href="/category/Game Console">Game Consoles</a></li>
-            </ul>
-        </nav>
-
-        <div class="product-list">
-            {% for product in products %}
-            <div class="product-card">
-                <a href="/product/{{ product[0] }}">
-                    <img src="{{ product[3] }}" alt="{{ product[1] }}" class="product-image">
-                </a>
-                <h2 class="product-name">
-                    <a href="/product/{{ product[0] }}">{{ product[1] }}</a>
-                </h2>
-                <p class="product-price">{{ "{:,.0f}".format(product[2]) }}₫</p>
-                <div class="product-actions">
-                    <a href="#" class="add-to-cart">Thêm vào giỏ hàng</a>
-                    <a href="#" class="buy-now">Mua ngay</a>
-                </div>
-            </div>
-            {% endfor %}
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-bars"></i> DANH MỤC SẢN PHẨM</h2>
         </div>
-    </main>
+        <ul class="sidebar-menu">
+            <li><a href="/category/All" class="{{ 'active' if category == 'All' else '' }}"><i class="fas fa-store"></i>
+                    Tất cả sản phẩm</a></li>
+            <li><a href="/category/Laptop" class="{{ 'active' if category == 'Laptop' else '' }}"><i
+                        class="fas fa-laptop"></i> Laptop <span class="badge">Hot</span></a></li>
+            <li><a href="/category/Smartphone" class="{{ 'active' if category == 'Smartphone' else '' }}"><i
+                        class="fas fa-mobile-alt"></i> Điện thoại</a></li>
+            <li><a href="/category/Tablet" class="{{ 'active' if category == 'Tablet' else '' }}"><i
+                        class="fas fa-tablet-alt"></i> Máy tính bảng</a></li>
+            <li><a href="/category/Accessories" class="{{ 'active' if category == 'Accessories' else '' }}"><i
+                        class="fas fa-keyboard"></i> Phụ kiện</a></li>
+            <li><a href="/category/Smartwatch" class="{{ 'active' if category == 'Smartwatch' else '' }}"><i
+                        class="fas fa-clock"></i> Đồng hồ thông minh</a></li>
+            <li><a href="/category/Headphones" class="{{ 'active' if category == 'Headphones' else '' }}"><i
+                        class="fas fa-headphones"></i> Tai nghe</a></li>
+            <li><a href="/category/Camera" class="{{ 'active' if category == 'Camera' else '' }}"><i
+                        class="fas fa-camera"></i> Máy ảnh</a></li>
+            <li><a href="/category/TV" class="{{ 'active' if category == 'TV' else '' }}"><i class="fas fa-tv"></i>
+                    TV</a></li>
+            <li><a href="/category/Action Camera" class="{{ 'active' if category == 'Action Camera' else '' }}"><i
+                        class="fas fa-video"></i> Camera hành động</a></li>
+            <li><a href="/category/Drone" class="{{ 'active' if category == 'Drone' else '' }}"><i
+                        class="fas fa-drone-alt"></i> Drone</a></li>
+            <li><a href="/category/Game Console" class="{{ 'active' if category == 'Game Console' else '' }}"><i
+                        class="fas fa-gamepad"></i> Máy chơi game</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header>
+            <h1>Danh mục: {{ category }}</h1>
+        </header>
+        <main>
+            <div class="product-list">
+                {% for product in products %}
+                <div class="product-card">
+                    <a href="/product/{{ product[0] }}">
+                        <img src="{{ product[3] }}" alt="{{ product[1] }}" class="product-image">
+                    </a>
+                    <h2 class="product-name">
+                        <a href="/product/{{ product[0] }}">{{ product[1] }}</a>
+                    </h2>
+                    <p class="product-price">{{ "{:,.0f}".format(product[2]) }}₫</p>
+                    <div class="product-actions">
+                        <a href="#" class="add-to-cart">Thêm vào giỏ hàng</a>
+                        <a href="#" class="buy-now">Mua ngay</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'93b70d411c346735',t:'MTc0NjUxOTU1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
 </body>
 
 </html>

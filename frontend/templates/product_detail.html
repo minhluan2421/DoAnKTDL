@@ -6,29 +6,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ product[1] }}</title>
     <link rel="stylesheet" href="/static/css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f6f9;
             color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         header {
-            background-color: #007bff;
+            background: linear-gradient(135deg, #007bff, #3f8efc);
             color: white;
-            padding: 20px 0;
+            padding: 20px;
             text-align: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            position: relative;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
         }
 
         header h1 {
             margin: 0;
-            font-size: 2rem;
+            font-size: 2.2rem;
+            font-weight: 600;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .back-button:hover {
+            background-color: #5a6268;
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .back-button i {
+            font-size: 1.1rem;
         }
 
         .product-detail {
@@ -38,55 +76,84 @@
             align-items: flex-start;
             gap: 40px;
             padding: 40px 20px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
         }
 
         .product-image {
-            max-width: 400px;
             width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            max-width: 450px;
+            height: 400px;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
         }
 
         .product-info {
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
-            background-color: #fff;
-            padding: 30px;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            padding: 35px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .product-info:hover {
+            transform: translateY(-5px);
         }
 
         .product-info h1 {
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             color: #007bff;
             margin-bottom: 15px;
+            font-weight: 600;
+            line-height: 1.3;
         }
 
         .product-info .price {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             color: #28a745;
             font-weight: bold;
-            margin: 10px 0;
+            margin: 15px 0;
+            letter-spacing: 0.5px;
         }
 
         .product-info .description {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 20px;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 30px;
         }
 
         .buttons {
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
+            align-items: center;
         }
 
         .buttons a {
-            padding: 12px 24px;
+            padding: 14px 28px;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             text-decoration: none;
-            transition: background-color 0.3s ease;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .buttons a:hover {
+            transform: scale(1.05);
         }
 
         .buy-now {
@@ -106,11 +173,62 @@
         .add-to-cart:hover {
             background-color: #1e7e34;
         }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px;
+            }
+
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .back-button {
+                position: static;
+                transform: none;
+                margin-bottom: 15px;
+                display: inline-block;
+            }
+
+            .product-detail {
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+            }
+
+            .product-image {
+                max-width: 100%;
+                height: 300px;
+            }
+
+            .product-info {
+                padding: 25px;
+            }
+
+            .product-info h1 {
+                font-size: 1.8rem;
+            }
+
+            .product-info .price {
+                font-size: 1.5rem;
+            }
+
+            .product-info .description {
+                font-size: 1rem;
+            }
+
+            .buttons a {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 
 <body>
     <header>
+        <a href="javascript:history.back()" class="back-button"><i class="fas fa-arrow-left"></i> Quay lại</a>
         <h1>Chi tiết sản phẩm</h1>
     </header>
     <main>
@@ -121,12 +239,13 @@
                 <p class="price">{{ "{:,.0f}".format(product[2]) }}₫</p>
                 <p class="description">{{ product[4] }}</p>
                 <div class="buttons">
-                    <a href="#" class="buy-now">Mua ngay</a>
-                    <a href="#" class="add-to-cart">Thêm vào giỏ hàng</a>
+                    <a href="#" class="buy-now"><i class="fas fa-shopping-bag"></i> Mua ngay</a>
+                    <a href="#" class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng</a>
                 </div>
             </div>
         </div>
     </main>
+    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'93b711c96d57454e',t:'MTc0NjUxOTc0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
 </body>
 
 </html>
