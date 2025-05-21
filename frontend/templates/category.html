@@ -246,31 +246,57 @@
         </ul>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <header>
-            <h1>Danh mục: {{ category }}</h1>
-        </header>
-        <main>
-            <div class="product-list">
-                {% for product in products %}
-                <div class="product-card">
-                    <a href="/product/{{ product[0] }}">
-                        <img src="{{ product[3] }}" alt="{{ product[1] }}" class="product-image">
-                    </a>
-                    <h2 class="product-name">
-                        <a href="/product/{{ product[0] }}">{{ product[1] }}</a>
-                    </h2>
-                    <p class="product-price">{{ "{:,.0f}".format(product[2]) }}₫</p>
-                    <div class="product-actions">
-                        <a href="#" class="add-to-cart">Thêm vào giỏ hàng</a>
-                        <a href="#" class="buy-now">Mua ngay</a>
-                    </div>
-                </div>
+<!-- Main Content -->
+<div class="main-content">
+    <header style="position: relative;">
+        <h1>Danh mục: {{ category }}</h1>
+
+        <!-- ICON GIỎ HÀNG -->
+        <div style="position: absolute; top: 20px; right: 30px;">
+            <a href="/cart" style="color: white; text-decoration: none; font-size: 1.2rem;">
+                <i class="fas fa-shopping-cart"></i> Giỏ hàng
+                {% if session.cart %}
+                    <span style="background: red; color: white; font-size: 0.8rem; padding: 2px 6px; border-radius: 50%;">
+                        {{ session.cart|length }}
+                    </span>
+                {% endif %}
+            </a>
+        </div>
+    </header>
+
+    <!-- FLASH MESSAGE -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div style="background-color: #d4edda; color: #155724; padding: 10px 20px; margin: 15px 0; border-left: 5px solid #28a745; border-radius: 5px;">
+                {% for message in messages %}
+                    {{ message }}
                 {% endfor %}
             </div>
-        </main>
-    </div>
+        {% endif %}
+    {% endwith %}
+
+    <main>
+        <div class="product-list">
+            {% for product in products %}
+            <div class="product-card">
+                <a href="/product/{{ product[0] }}">
+                    <img src="{{ product[3] }}" alt="{{ product[1] }}" class="product-image">
+                </a>
+                <h2 class="product-name">
+                    <a href="/product/{{ product[0] }}">{{ product[1] }}</a>
+                </h2>
+                <p class="product-price">{{ "{:,.0f}".format(product[2]) }}₫</p>
+                <div class="product-actions">
+                    <a href="/add_to_cart/{{ product[0] }}" class="add-to-cart">Thêm vào giỏ hàng</a>
+                    <a href="#" class="buy-now">Mua ngay</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+</div>
+
+
     <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'93b70d411c346735',t:'MTc0NjUxOTU1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
 </body>
 

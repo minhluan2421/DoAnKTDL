@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Giỏ hàng</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            position: relative;
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #6c757d;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .flash-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px 20px;
+            margin: 20px 0;
+            border-left: 6px solid #28a745;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px 12px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #007bff;
+            color: #fff;
+        }
+
+        td img {
+            max-width: 80px;
+            border-radius: 8px;
+        }
+
+        .actions a {
+            text-decoration: none;
+            padding: 6px 12px;
+            background: #dc3545;
+            color: white;
+            border-radius: 4px;
+        }
+
+        .btn-group {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .btn-group a {
+            text-decoration: none;
+            display: inline-block;
+            padding: 10px 18px;
+            margin-left: 10px;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .btn-group a.clear {
+            background: #6c757d;
+        }
+
+        .empty-cart {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #999;
+            margin: 40px 0;
+        }
+
+        .quantity-form {
+            display: inline;
+        }
+
+        .quantity-form button {
+            padding: 4px 10px;
+            margin: 0 3px;
+            font-size: 14px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .quantity-form button:hover {
+            background: #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="javascript:history.back()" class="back-button"><i class="fas fa-arrow-left"></i> Quay lại</a>
+            <h1>Giỏ hàng của bạn</h1>
+        </header>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-message" id="flash">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% if items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Ảnh</th>
+                    <th>Sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Thành tiền</th>
+                    <th>Xóa</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td><img src="{{ item[3] }}" alt="{{ item[1] }}"></td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ "{:,.0f}".format(item[2]) }}₫</td>
+                    <td>
+                        <form action="/update_cart/{{ item[0] }}" method="post" class="quantity-form">
+                            <input type="hidden" name="action" value="subtract">
+                            <button type="submit">−</button>
+                        </form>
+                        {{ item[4] }}
+                        <form action="/update_cart/{{ item[0] }}" method="post" class="quantity-form">
+                            <input type="hidden" name="action" value="add">
+                            <button type="submit">+</button>
+                        </form>
+                    </td>
+                    <td>{{ "{:,.0f}".format(item[2] * item[4]) }}₫</td>
+                    <td class="actions">
+                        <a href="/remove_from_cart/{{ item[0] }}">Xóa</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="btn-group">
+            <a href="/clear_cart" class="clear">Xóa tất cả</a>
+            <a href="/checkout">Thanh toán</a>
+        </div>
+
+        {% else %}
+        <p class="empty-cart">Giỏ hàng của bạn đang trống.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        // Tự động ẩn flash message sau 3 giây
+        window.onload = function () {
+            const flash = document.getElementById("flash");
+            if (flash) {
+                setTimeout(() => {
+                    flash.style.display = 'none';
+                }, 3000);
+            }
+        };
+    </script>
+</body>
+</html>

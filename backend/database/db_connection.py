@@ -4,10 +4,10 @@ def get_connection():
     # Kết nối đến SQL Server với tài khoản riêng
     conn = pyodbc.connect(
         "Driver={SQL Server};"
-        "Server=DESKTOP-360CGGJ;"  # Thay bằng tên server của bạn
+        "Server=DESKTOP-BI6BQ2T\SQLEXPRESS;"  # Thay bằng tên server của bạn
         "Database=ElectronicsStore;"  # Tên cơ sở dữ liệu
-        "UID=sa;"  # Thay bằng tên tài khoản SQL Server của bạn
-        "PWD=123456;"  # Thay bằng mật khẩu của bạn
+        # "UID=sa;"  # Thay bằng tên tài khoản SQL Server của bạn
+        # "PWD=123456;"  # Thay bằng mật khẩu của bạn
     )
     return conn
 
@@ -17,9 +17,9 @@ def get_products():
     cursor.execute("SELECT ProductID, ProductName, Price, ImagePath FROM Products")
     products = cursor.fetchall()
     conn.close()
-    # Thêm tiền tố 'static/' vào đường dẫn ảnh
+    # Dùng đường dẫn tuyệt đối
     products = [
-        (product[0], product[1], product[2], f"static/{product[3]}") for product in products
+        (product[0], product[1], product[2], f"/static/{product[3]}") for product in products
     ]
     return products
 

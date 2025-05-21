@@ -227,10 +227,34 @@
 </head>
 
 <body>
-    <header>
+    <header style="position: relative;">
         <a href="javascript:history.back()" class="back-button"><i class="fas fa-arrow-left"></i> Quay lại</a>
         <h1>Chi tiết sản phẩm</h1>
+
+        <!-- ICON GIỎ HÀNG -->
+        <div style="position: absolute; top: 20px; right: 30px;">
+            <a href="/cart" style="color: white; text-decoration: none; font-size: 1.2rem;">
+                <i class="fas fa-shopping-cart"></i> Giỏ hàng
+                {% if session.cart %}
+                    <span style="background: red; color: white; font-size: 0.8rem; padding: 2px 6px; border-radius: 50%;">
+                        {{ session.cart|length }}
+                    </span>
+                {% endif %}
+            </a>
+        </div>
     </header>
+
+    <!-- FLASH MESSAGE (nếu cần dùng ở đây nữa) -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div style="background-color: #d4edda; color: #155724; padding: 10px 20px; margin: 15px 0; border-left: 5px solid #28a745; border-radius: 5px; text-align: center;">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     <main>
         <div class="product-detail">
             <img src="/static/{{ product[3] }}" alt="{{ product[1] }}" class="product-image" />
@@ -240,12 +264,13 @@
                 <p class="description">{{ product[4] }}</p>
                 <div class="buttons">
                     <a href="#" class="buy-now"><i class="fas fa-shopping-bag"></i> Mua ngay</a>
-                    <a href="#" class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng</a>
+                    <a href="/add_to_cart/{{ product[0] }}" class="add-to-cart">
+                        <i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng
+                    </a>
                 </div>
             </div>
         </div>
     </main>
-    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'93b711c96d57454e',t:'MTc0NjUxOTc0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
 </body>
 
 </html>
