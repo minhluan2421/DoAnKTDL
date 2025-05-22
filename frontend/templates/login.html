@@ -88,22 +88,37 @@
 
 <body>
   <div class="container">
+      {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash-message" style="background:#fdecea; color:#e74c3c; padding: 12px 18px; margin-bottom: 15px; border-left: 5px solid #e74c3c; border-radius: 6px;">
+        {% for message in messages %}
+          {{ message }}
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
     <!-- Form đăng nhập -->
     <div id="login-form" class="form">
       <h2>Đăng Nhập</h2>
-      <input type="text" placeholder="Tên đăng nhập" />
-      <input type="password" placeholder="Mật khẩu" />
-      <button>Đăng Nhập</button>
+      <form action="/login" method="POST">
+        <input type="text" name="username" placeholder="Tên đăng nhập" required />
+        <input type="password" name="password" placeholder="Mật khẩu" required />
+        <button type="submit">Đăng Nhập</button>
+      </form>
       <div class="toggle-link">
         Chưa có tài khoản? <span onclick="toggleForm()">Đăng ký</span>
       </div>
     </div>
 
+
     <!-- Form đăng ký -->
     <div id="register-form" class="form hidden">
       <h2>Đăng Ký</h2>
-      <input type="text" placeholder="Tên đăng nhập" />
+      <input type="text" placeholder="Họ và tên" />
       <input type="email" placeholder="Email" />
+      <input type="text" placeholder="Số điện thoại" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="11" />
+      <input type="text" placeholder="Địa chỉ" />
+      <input type="text" placeholder="Tên đăng nhập" />
       <input type="password" placeholder="Mật khẩu" />
       <input type="password" placeholder="Xác nhận mật khẩu" />
       <button>Đăng Ký</button>
@@ -122,5 +137,6 @@
     }
   </script>
 </body>
+
 
 </html>

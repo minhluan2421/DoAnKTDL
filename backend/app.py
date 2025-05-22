@@ -46,19 +46,34 @@ def recommendations():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get('username')
-        if username:
+        username = request.form['username']
+        password = request.form['password']
+
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT MaTaiKhoan FROM TaiKhoan WHERE TenDangNhap = ? AND MatKhau = ?", (username, password))
+        result = cursor.fetchone()
+        conn.close()
+
+        if result:
             session['username'] = username
+            session['ma_tai_khoan'] = result[0]
+            flash("Đăng nhập thành công!")
             return redirect(url_for('index'))
         else:
-            return render_template('login.html', error="Tên đăng nhập không hợp lệ.")
+            flash("Tên đăng nhập hoặc mật khẩu không đúng!")
+            return redirect(url_for('login'))
+
     return render_template('login.html')
+
 
 # Đăng xuất
 @app.route('/logout')
 def logout():
-    session.pop('username', None)
+    session.clear()
+    flash("Bạn đã đăng xuất.")
     return redirect(url_for('index'))
+
 
 # Trả về sản phẩm theo danh mục dưới dạng JSON
 @app.route('/api/products')
@@ -84,68 +99,207 @@ def product_detail(product_id):
 # Thêm sản phẩm vào giỏ hàng
 @app.route('/add_to_cart/<int:product_id>')
 def add_to_cart(product_id):
-    cart = session.get('cart', {})
-    cart[str(product_id)] = cart.get(str(product_id), 0) + 1
-    session['cart'] = cart
+    if 'ma_tai_khoan' in session:
+        ma_tai_khoan = session['ma_tai_khoan']
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        # Kiểm tra nếu sản phẩm đã có trong giỏ thì cập nhật số lượng
+        cursor.execute("SELECT SoLuong FROM GioHang WHERE MaTaiKhoan = ? AND ProductID = ?", (ma_tai_khoan, product_id))
+        existing = cursor.fetchone()
+
+        if existing:
+            new_qty = existing[0] + 1
+            cursor.execute("UPDATE GioHang SET SoLuong = ?, NgayThem = GETDATE() WHERE MaTaiKhoan = ? AND ProductID = ?",
+                           (new_qty, ma_tai_khoan, product_id))
+        else:
+            cursor.execute("INSERT INTO GioHang (MaTaiKhoan, ProductID, SoLuong) VALUES (?, ?, 1)", (ma_tai_khoan, product_id))
+
+        conn.commit()
+        conn.close()
+    else:
+        # Lưu vào session nếu chưa đăng nhập
+        cart = session.get('cart', {})
+        cart[str(product_id)] = cart.get(str(product_id), 0) + 1
+        session['cart'] = cart
+
     flash("Đã thêm vào giỏ hàng")
-    return redirect(request.referrer or url_for('index'))
+    return redirect(request.referrer or url_for('cart'))
+
 
 # Xem giỏ hàng
 @app.route('/cart')
 def cart():
-    cart = session.get('cart', {})
-    if not cart:
-        return render_template('cart.html', items=[])
-
-    conn = get_connection()
-    cursor = conn.cursor()
-    product_ids = list(map(int, cart.keys()))
-    placeholders = ','.join(['?'] * len(product_ids))
-    query = f"SELECT ProductID, ProductName, Price, ImagePath FROM Products WHERE ProductID IN ({placeholders})"
-    cursor.execute(query, product_ids)
-    products = cursor.fetchall()
-    conn.close()
-
-    items = []
-    for product in products:
-        pid = str(product[0])
-        quantity = cart[pid]
-        items.append((product[0], product[1], product[2], f"/static/{product[3]}", quantity))
+    if 'ma_tai_khoan' in session:
+        ma_tai_khoan = session['ma_tai_khoan']
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT p.ProductID, p.ProductName, p.Price, p.ImagePath, g.SoLuong
+            FROM GioHang g
+            JOIN Products p ON g.ProductID = p.ProductID
+            WHERE g.MaTaiKhoan = ?
+        """, (ma_tai_khoan,))
+        items = cursor.fetchall()
+        conn.close()
+        items = [(item[0], item[1], item[2], f"/static/{item[3]}", item[4]) for item in items]
+    else:
+        cart = session.get('cart', {})
+        if not cart:
+            return render_template('cart.html', items=[])
+        conn = get_connection()
+        cursor = conn.cursor()
+        product_ids = list(map(int, cart.keys()))
+        placeholders = ','.join(['?'] * len(product_ids))
+        cursor.execute(f"SELECT ProductID, ProductName, Price, ImagePath FROM Products WHERE ProductID IN ({placeholders})", product_ids)
+        products = cursor.fetchall()
+        conn.close()
+        items = [(p[0], p[1], p[2], f"/static/{p[3]}", cart[str(p[0])]) for p in products]
 
     return render_template('cart.html', items=items)
+
 
 # Cập nhật số lượng sản phẩm trong giỏ hàng
 @app.route('/update_cart/<int:product_id>', methods=['POST'])
 def update_cart(product_id):
     action = request.form.get('action')
-    cart = session.get('cart', {})
+    
+    if 'ma_tai_khoan' in session:
+        ma_tai_khoan = session['ma_tai_khoan']
+        conn = get_connection()
+        cursor = conn.cursor()
 
-    if str(product_id) in cart:
-        if action == 'add':
-            cart[str(product_id)] += 1
-        elif action == 'subtract':
-            cart[str(product_id)] -= 1
-            if cart[str(product_id)] <= 0:
-                cart.pop(str(product_id))
+        cursor.execute("SELECT SoLuong FROM GioHang WHERE MaTaiKhoan = ? AND ProductID = ?", (ma_tai_khoan, product_id))
+        row = cursor.fetchone()
 
-    session['cart'] = cart
+        if row:
+            new_qty = row[0] + 1 if action == 'add' else row[0] - 1
+            if new_qty <= 0:
+                cursor.execute("DELETE FROM GioHang WHERE MaTaiKhoan = ? AND ProductID = ?", (ma_tai_khoan, product_id))
+            else:
+                cursor.execute("UPDATE GioHang SET SoLuong = ?, NgayThem = GETDATE() WHERE MaTaiKhoan = ? AND ProductID = ?", (new_qty, ma_tai_khoan, product_id))
+            conn.commit()
+        conn.close()
+
+    else:
+        cart = session.get('cart', {})
+        if str(product_id) in cart:
+            if action == 'add':
+                cart[str(product_id)] += 1
+            elif action == 'subtract':
+                cart[str(product_id)] -= 1
+                if cart[str(product_id)] <= 0:
+                    cart.pop(str(product_id))
+            session['cart'] = cart
+
     return redirect(url_for('cart'))
+
 
 # Xóa sản phẩm khỏi giỏ hàng
 @app.route('/remove_from_cart/<int:product_id>')
 def remove_from_cart(product_id):
-    cart = session.get('cart', {})
-    cart.pop(str(product_id), None)
-    session['cart'] = cart
-    flash("Đã xóa sản phẩm khỏi giỏ")
+    if 'ma_tai_khoan' in session:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM GioHang WHERE MaTaiKhoan = ? AND ProductID = ?", (session['ma_tai_khoan'], product_id))
+        conn.commit()
+        conn.close()
+    else:
+        cart = session.get('cart', {})
+        cart.pop(str(product_id), None)
+        session['cart'] = cart
+    flash("Đã xóa sản phẩm khỏi giỏ hàng")
     return redirect(url_for('cart'))
+
 
 # Xóa toàn bộ giỏ hàng
 @app.route('/clear_cart')
 def clear_cart():
-    session.pop('cart', None)
+    if 'ma_tai_khoan' in session:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM GioHang WHERE MaTaiKhoan = ?", (session['ma_tai_khoan'],))
+        conn.commit()
+        conn.close()
+    else:
+        session.pop('cart', None)
     flash("Đã xóa toàn bộ giỏ hàng")
     return redirect(url_for('cart'))
+
+# Thanh toán
+@app.route('/checkout')
+def checkout():
+    if 'ma_tai_khoan' not in session:
+        flash("Vui lòng đăng nhập để thanh toán.")
+        return redirect(url_for('login'))
+
+    ma_tai_khoan = session['ma_tai_khoan']
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Lấy thông tin người dùng
+    cursor.execute("SELECT MaNguoiDung FROM NguoiDung WHERE MaTaiKhoan = ?", (ma_tai_khoan,))
+    nguoidung = cursor.fetchone()
+    if not nguoidung:
+        flash("Không tìm thấy thông tin người dùng.")
+        return redirect(url_for('cart'))
+
+    ma_nguoidung = nguoidung[0]
+
+    # Lấy giỏ hàng từ DB
+    cursor.execute("""
+        SELECT g.ProductID, p.Price, g.SoLuong
+        FROM GioHang g
+        JOIN Products p ON g.ProductID = p.ProductID
+        WHERE g.MaTaiKhoan = ?
+    """, (ma_tai_khoan,))
+    items = cursor.fetchall()
+
+    if not items:
+        flash("Giỏ hàng trống.")
+        return redirect(url_for('cart'))
+
+    # Tính tổng tiền
+    tong_tien = sum([item[1] * item[2] for item in items])
+
+    # Tạo hóa đơn
+    cursor.execute("INSERT INTO HoaDon (MaNguoiDung, TongTien) VALUES (?, ?)", (ma_nguoidung, tong_tien))
+    conn.commit()
+
+    # Lấy mã hóa đơn vừa tạo
+    cursor.execute("SELECT @@IDENTITY")
+    ma_hoadon = int(cursor.fetchone()[0])
+
+    # Thêm chi tiết hóa đơn + lưu vào lịch sử mua hàng
+    for product_id, don_gia, so_luong in items:
+        cursor.execute(
+            "INSERT INTO ChiTietHoaDon (MaHoaDon, ProductID, SoLuong, DonGia) VALUES (?, ?, ?, ?)",
+            (ma_hoadon, product_id, so_luong, don_gia)
+        )
+        cursor.execute(
+            "INSERT INTO LichSuMuaHang (MaTaiKhoan, ProductID, SoLuong) VALUES (?, ?, ?)",
+            (ma_tai_khoan, product_id, so_luong)
+        )
+
+    # Xóa giỏ hàng
+    cursor.execute("DELETE FROM GioHang WHERE MaTaiKhoan = ?", (ma_tai_khoan,))
+    conn.commit()
+    conn.close()
+
+    flash("Thanh toán thành công!")
+    return redirect(url_for('index'))
+
+
+@app.context_processor
+def inject_cart_info():
+    def get_cart_count(ma_tai_khoan):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM GioHang WHERE MaTaiKhoan = ?", (ma_tai_khoan,))
+        count = cursor.fetchone()[0]
+        conn.close()
+        return count
+    return dict(get_cart_count=get_cart_count)
 
 
 

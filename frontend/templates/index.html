@@ -162,19 +162,24 @@
     <!-- Header nút cart + login -->
     <div class="header-right">
         <a href="/cart">
-            <i class="fas fa-shopping-cart"></i> Giỏ hàng
-            {% if session.cart %}
-                <span style="background: red; color: white; padding: 2px 6px; border-radius: 50%; font-size: 0.8rem;">
-                    {{ session.cart|length }}
-                </span>
-            {% endif %}
-        </a>
+        <i class="fas fa-shopping-cart"></i> Giỏ hàng
         {% if session.username %}
-            <a href="/logout"><i class="fas fa-sign-out-alt"></i> {{ session.username }}</a>
+            {% set count = get_cart_count(session.ma_tai_khoan) %}
+            {% if count > 0 %}
+            <span style="background:red;color:white;padding:2px 6px;border-radius:50%;">{{ count }}</span>
+            {% endif %}
+        {% elif session.cart %}
+            <span style="background:red;color:white;padding:2px 6px;border-radius:50%;">{{ session.cart|length }}</span>
+        {% endif %}
+        </a>
+
+        {% if session.username %}
+        <a href="/logout"><i class="fas fa-sign-out-alt"></i> {{ session.username }}</a>
         {% else %}
-            <a href="/login"><i class="fas fa-user"></i> Đăng nhập</a>
+        <a href="/login"><i class="fas fa-user"></i> Đăng nhập</a>
         {% endif %}
     </div>
+
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -194,8 +199,14 @@
     </div>
 
     <!-- Nội dung chính -->
-    <div class="main-content">
-        <h1>Danh mục: {{ category if category else "All" }}</h1>
+    <!-- <div class="main-content">
+        <h1>Danh mục: {{ category if category else "All" }}</h1> -->
+        <div class="main-content">
+
+        
+
+        <h1>Danh mục: {{ category }}</h1>
+
 
         <!-- Flash -->
         {% with messages = get_flashed_messages() %}

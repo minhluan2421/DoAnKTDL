@@ -136,7 +136,7 @@
 <body>
     <div class="container">
         <header>
-            <a href="javascript:history.back()" class="back-button"><i class="fas fa-arrow-left"></i> Quay lại</a>
+            <a href="/" class="back-button"><i class="fas fa-arrow-left"></i> Quay lại</a>
             <h1>Giỏ hàng của bạn</h1>
         </header>
 
@@ -190,7 +190,7 @@
 
         <div class="btn-group">
             <a href="/clear_cart" class="clear">Xóa tất cả</a>
-            <a href="/checkout">Thanh toán</a>
+            <a href="/checkout" onclick="return confirmCheckout()">Thanh toán</a>
         </div>
 
         {% else %}
@@ -208,6 +208,21 @@
                 }, 3000);
             }
         };
+        // Xác nhận thanh toán
+        function confirmCheckout() {
+            const isLoggedIn = "{{ session.username | default('') }}" !== "";
+            if (!isLoggedIn) {
+                alert("Bạn cần đăng nhập để thanh toán.");
+                window.location.href = "/login";
+                return false;
+            } else {
+                return confirm("Bạn có chắc muốn thanh toán?");
+            }
+        }
+        
     </script>
+
+
+    
 </body>
 </html>
