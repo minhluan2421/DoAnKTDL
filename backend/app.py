@@ -224,6 +224,7 @@ def update_cart(product_id):
     return redirect(url_for('cart'))
 
 
+
 @app.route('/remove_from_cart/<int:product_id>', methods=['POST'])
 def remove_from_cart(product_id):
     if 'ma_tai_khoan' in session:
@@ -237,8 +238,7 @@ def remove_from_cart(product_id):
         cart.pop(str(product_id), None)
         session['cart'] = cart
     flash("✅ Đã xóa sản phẩm khỏi giỏ hàng!", "success")
-    return redirect(url_for('cart'))
-
+    return redirect(url_for('cart'))  # Sửa lại về trang giỏ hàng
 
 
 @app.route('/clear_cart')
@@ -252,14 +252,17 @@ def clear_cart():
     else:
         session.pop('cart', None)
     flash("✅ Đã xóa toàn bộ giỏ hàng!", "success")
-    return redirect(url_for('cart'))
+    return redirect(url_for('cart'))  # Sửa lại về trang giỏ hàng
 
 
-@app.route('/checkout')
+
+
+@app.route('/checkout', methods=['POST'])
 def checkout():
     if 'ma_tai_khoan' not in session:
-        flash("⚠️ Vui lòng đăng nhập để thanh toán.", "warning")
-        return redirect(url_for('login'))
+        if 'ma_tai_khoan' not in session:
+        # Luôn trả về JSON nếu là POST (AJAX)
+            return jsonify({'need_login': True, 'message': '⚠️ Vui lòng đăng nhập để thanh toán.'})
 
     ma_tai_khoan = session['ma_tai_khoan']
     conn = get_connection()
@@ -309,6 +312,20 @@ def checkout():
 
     flash("✅ Thanh toán thành công!", "success")
     return redirect(url_for('index'))
+
+
+@app.route('/api/search')
+def api_search():
+    q = request.args.get('q', '').strip()
+    if not q:
+        return jsonify([])
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT ProductID, ProductName, Price, ImagePath FROM Products WHERE ProductName LIKE ?", ('%' + q + '%',))
+    products = cursor.fetchall()
+    conn.close()
+    products = [(p[0], p[1], p[2], f"/static/{p[3]}") for p in products]
+    return jsonify(products)
 
 
 @app.context_processor

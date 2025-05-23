@@ -491,6 +491,15 @@
 
 <body>
     <div class="cart-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div id="flash-message" style="background-color: #d4edda; border-left: 6px solid #28a745; color: #155724; padding: 16px 20px; margin-bottom: 30px; border-radius: 6px; box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);">
+                {% for category, message in messages %}
+                    <p style="margin: 0;">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
         <div class="cart-header">
             <a href="/"><i class="fas fa-arrow-left"></i> Quay về</a>
             <h1>Giỏ hàng của bạn</h1>
@@ -569,8 +578,7 @@
         </div>
 
         <div class="btn-group btn-right">
-            <button type="submit" class="btn-checkout" form="cart-form" aria-label="Thanh toán các sản phẩm đã chọn">Mua
-                ngay</button>
+            <button type="button" class="btn-checkout" id="checkout-btn" aria-label="Thanh toán các sản phẩm đã chọn">Mua ngay</button>
         </div>
 
 
@@ -613,6 +621,38 @@
             });
         };
     </script>
+
+    <script>
+        // Ẩn thông báo flash sau 3 giây
+        setTimeout(function() {
+            var flash = document.getElementById('flash-message');
+            if (flash) {
+                flash.style.display = 'none';
+            }
+        }, 3000);
+    </script>
+
+    <script>
+    document.getElementById('checkout-btn')?.addEventListener('click', function() {
+        fetch('/checkout', {method: 'POST', headers: {'X-Requested-With': 'XMLHttpRequest'}})
+            .then(res => res.json())
+            .then(data => {
+                if (data.need_login) {
+                    if (confirm(data.message + "\nBạn có muốn đăng nhập không?")) {
+                    window.location.href = '/login';
+                    }
+                }else {
+                // Nếu đã đăng nhập, reload lại để nhận flash hoặc chuyển trang
+                window.location.href = '/checkout';
+            }
+        })
+        .catch(() => {
+            // fallback nếu lỗi
+            window.location.href = '/checkout';
+        });
+});
+</script>
+
 </body>
 
 </html>
