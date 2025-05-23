@@ -1,159 +1,507 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giỏ hàng</title>
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f7fa;
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        }
-
-        header {
-            position: relative;
-            background-color: #007bff;
-            color: white;
+        body {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            color: #1e1e1e;
+            min-height: 100vh;
             padding: 20px;
-            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: center;
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 1.8rem;
-            text-align: center;
-        }
-
-        .back-button {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: #6c757d;
-            color: white;
-            padding: 8px 14px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-
-        .flash-message {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 12px 20px;
-            margin: 20px 0;
-            border-left: 6px solid #28a745;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-
-        table {
+        .cart-container {
+            max-width: 1000px;
             width: 100%;
-            border-collapse: collapse;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            overflow-x: auto;
         }
 
-        th, td {
-            padding: 14px 12px;
-            text-align: center;
-            border-bottom: 1px solid #eee;
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
-        th {
-            background: #007bff;
-            color: #fff;
-        }
-
-        td img {
-            max-width: 80px;
-            border-radius: 8px;
-        }
-
-        .actions a {
+        .cart-header a {
+            color: #0288d1;
             text-decoration: none;
-            padding: 6px 12px;
-            background: #dc3545;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-header a i {
+            margin-right: 8px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: #0d47a1;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .cart-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+            table-layout: fixed;
+        }
+
+        .cart-table th {
+            background: #1976d2;
             color: white;
-            border-radius: 4px;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .cart-table td {
+            background: #f5faff;
+            padding: 15px;
+            text-align: center;
+            vertical-align: middle;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .cart-table th:nth-child(1),
+        .cart-table td:nth-child(1) {
+            width: 5%;
+        }
+
+        .cart-table th:nth-child(2),
+        .cart-table td:nth-child(2) {
+            width: 15%;
+        }
+
+        .cart-table th:nth-child(3),
+        .cart-table td:nth-child(3) {
+            width: 25%;
+        }
+
+        .cart-table th:nth-child(4),
+        .cart-table td:nth-child(4) {
+            width: 15%;
+        }
+
+        .cart-table th:nth-child(5),
+        .cart-table td:nth-child(5) {
+            width: 15%;
+        }
+
+        .cart-table th:nth-child(6),
+        .cart-table td:nth-child(6) {
+            width: 15%;
+        }
+
+        .cart-table th:nth-child(7),
+        .cart-table td:nth-child(7) {
+            width: 10%;
+        }
+
+        .select-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #1976d2;
+        }
+
+        .cart-table td img {
+            max-width: 100px;
+            max-height: 80px;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #1e1e1e;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .price,
+        .total-price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #d32f2f;
+        }
+
+        .quantity-cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            min-width: 120px;
+        }
+
+        .quantity-form button {
+            width: 30px;
+            height: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            background: #1976d2;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .quantity-form button:hover {
+            background: #1565c0;
+        }
+
+        .quantity-display {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #424242;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .remove-link {
+            color: #d32f2f;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .remove-link:hover {
+            text-decoration: underline;
+        }
+
+        .extra-items {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .extra-items a {
+            color: #1976d2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .extra-items a:hover {
+            text-decoration: underline;
         }
 
         .btn-group {
             margin-top: 20px;
-            text-align: right;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .btn-group a {
-            text-decoration: none;
-            display: inline-block;
-            padding: 10px 18px;
-            margin-left: 10px;
-            background: #007bff;
+        .btn-group .select-all {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-group.btn-right {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 15px;
+            /* hoặc tùy chỉnh khoảng cách trên */
+        }
+
+
+        .select-all-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #1976d2;
+        }
+
+        .btn-checkout {
+            padding: 10px 20px;
+            background: #2e7d32;
             color: white;
-            border-radius: 5px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
             transition: background 0.3s;
         }
 
-        .btn-group a.clear {
-            background: #6c757d;
+        .btn-checkout:hover {
+            background: #1b5e20;
         }
 
-        .empty-cart {
-            text-align: center;
+        .total-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8eaf6;
+            border-radius: 10px;
+            text-align: right;
+        }
+
+        .total-section p {
             font-size: 1.2rem;
-            color: #999;
-            margin: 40px 0;
+            font-weight: 600;
+            color: #1e1e1e;
         }
 
-        .quantity-form {
-            display: inline;
+        .total-section .total-amount {
+            color: #d32f2f;
+            font-size: 1.3rem;
+        }
+
+        @media (max-width: 768px) {
+            .cart-container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .cart-table th,
+            .cart-table td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+
+            .cart-table td img {
+                max-width: 60px;
+                max-height: 50px;
+            }
+
+            .quantity-form button {
+                width: 25px;
+                height: 25px;
+                font-size: 14px;
+            }
+
+            .quantity-display {
+                font-size: 0.9rem;
+            }
+
+            .btn-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn-checkout {
+                width: 100%;
+            }
+
+            .extra-items {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        .cart-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 15px;
+            font-size: 1rem;
+            table-layout: fixed;
+        }
+
+        .cart-table thead th {
+            background-color: #1565c0;
+            color: white;
+            font-weight: 700;
+            padding: 15px 10px;
+            border-radius: 12px 12px 0 0;
+            text-align: center;
+            user-select: none;
+        }
+
+        .cart-table tbody tr {
+            background: #f0f7ff;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(21, 101, 192, 0.1);
+            transition: background 0.3s ease;
+        }
+
+        .cart-table tbody tr:hover {
+            background: #dbefff;
+        }
+
+        .cart-table tbody td {
+            padding: 12px 8px;
+            text-align: center;
+            vertical-align: middle;
+            border-radius: 12px;
+            word-wrap: break-word;
+        }
+
+        /* Checkbox style */
+        .select-checkbox,
+        .select-all-checkbox {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: #1565c0;
+            vertical-align: middle;
+        }
+
+        /* Image wrapper */
+        .img-wrapper {
+            width: 100px;
+            height: 80px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 1px 5px rgba(21, 101, 192, 0.2);
+        }
+
+        .img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* Product info */
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 80px;
+        }
+
+        .product-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #0d47a1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Price styles */
+        .price,
+        .total-price {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #d32f2f;
+        }
+
+        /* Quantity controls */
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .quantity-form button {
-            padding: 4px 10px;
-            margin: 0 3px;
-            font-size: 14px;
-            border-radius: 4px;
+            width: 32px;
+            height: 32px;
+            font-size: 20px;
+            font-weight: 700;
             border: none;
+            border-radius: 8px;
+            background-color: #1565c0;
+            color: white;
             cursor: pointer;
+            transition: background-color 0.25s ease;
+            line-height: 1;
         }
 
         .quantity-form button:hover {
-            background: #eee;
+            background-color: #0d3c75;
+        }
+
+        .quantity-display {
+            min-width: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #424242;
+            user-select: none;
+        }
+
+        /* Remove button */
+        .btn-remove {
+            background-color: transparent;
+            border: none;
+            color: #d32f2f;
+            font-size: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            line-height: 1;
+        }
+
+        .btn-remove:hover {
+            color: #9a0007;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cart-table thead th {
+                font-size: 0.85rem;
+                padding: 10px 5px;
+            }
+
+            .img-wrapper {
+                width: 70px;
+                height: 55px;
+            }
+
+            .quantity-form button {
+                width: 28px;
+                height: 28px;
+                font-size: 18px;
+            }
+
+            .quantity-display {
+                font-size: 1rem;
+                min-width: 25px;
+            }
+
+            .product-name {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <a href="/" class="back-button"><i class="fas fa-arrow-left"></i> Quay lại</a>
-            <h1>Giỏ hàng của bạn</h1>
-        </header>
 
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="flash-message" id="flash">
-                    {% for message in messages %}
-                        {{ message }}
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
+<body>
+    <div class="cart-container">
+        <div class="cart-header">
+            <a href="/"><i class="fas fa-arrow-left"></i> Quay về</a>
+            <h1>Giỏ hàng của bạn</h1>
+        </div>
 
         {% if items %}
-        <table>
+        <table class="cart-table">
             <thead>
                 <tr>
+                    <th><input type="checkbox" id="select-all" class="select-all-checkbox"
+                            aria-label="Chọn tất cả sản phẩm"></th>
                     <th>Ảnh</th>
                     <th>Sản phẩm</th>
                     <th>Giá</th>
@@ -165,64 +513,106 @@
             <tbody>
                 {% for item in items %}
                 <tr>
-                    <td><img src="{{ item[3] }}" alt="{{ item[1] }}"></td>
-                    <td>{{ item[1] }}</td>
-                    <td>{{ "{:,.0f}".format(item[2]) }}₫</td>
                     <td>
-                        <form action="/update_cart/{{ item[0] }}" method="post" class="quantity-form">
-                            <input type="hidden" name="action" value="subtract">
-                            <button type="submit">−</button>
-                        </form>
-                        {{ item[4] }}
-                        <form action="/update_cart/{{ item[0] }}" method="post" class="quantity-form">
-                            <input type="hidden" name="action" value="add">
-                            <button type="submit">+</button>
-                        </form>
+                        <input type="checkbox" class="select-checkbox" name="selected_items" value="{{ item[0] }}"
+                            aria-label="Chọn sản phẩm {{ item[1] }}">
                     </td>
-                    <td>{{ "{:,.0f}".format(item[2] * item[4]) }}₫</td>
-                    <td class="actions">
-                        <a href="/remove_from_cart/{{ item[0] }}">Xóa</a>
+                    <td>
+                        <div class="img-wrapper">
+                            <img src="{{ item[3] }}" alt="{{ item[1] }}" loading="lazy">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="product-info">
+                            <div class="product-name">{{ item[1] }}</div>
+                            <!-- Có thể thêm mô tả hoặc mã sản phẩm nếu muốn -->
+                        </div>
+                    </td>
+                    <td class="price">{{ "{:,.0f}".format(item[2]) }}₫</td>
+                    <td>
+                        <div class="quantity-control" aria-label="Số lượng sản phẩm {{ item[1] }}">
+                            <form action="/update_cart/{{ item[0] }}" method="post" class="quantity-form subtract"
+                                aria-label="Giảm số lượng {{ item[1] }}">
+                                <input type="hidden" name="action" value="subtract">
+                                <button type="submit" aria-label="Giảm số lượng">−</button>
+                            </form>
+                            <span class="quantity-display">{{ item[4] }}</span>
+                            <form action="/update_cart/{{ item[0] }}" method="post" class="quantity-form add"
+                                aria-label="Tăng số lượng {{ item[1] }}">
+                                <input type="hidden" name="action" value="add">
+                                <button type="submit" aria-label="Tăng số lượng">+</button>
+                            </form>
+                        </div>
+                    </td>
+                    <td class="total-price">{{ "{:,.0f}".format(item[2] * item[4]) }}₫</td>
+                    <td>
+                        <form action="{{ url_for('remove_from_cart', product_id=item[0]) }}" method="post"
+                            aria-label="Xóa sản phẩm {{ item[1] }}">
+                            <button type="submit" class="btn-remove" title="Xóa sản phẩm">×</button>
+                        </form>
+
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
 
-        <div class="btn-group">
-            <a href="/clear_cart" class="clear">Xóa tất cả</a>
-            <a href="/checkout" onclick="return confirmCheckout()">Thanh toán</a>
+        <div class="extra-items">
+            <div>
+                <p>Bảo vệ toàn diện với Bảo hiểm mở rộng</p>
+                <a href="#">chọn gói</a>
+            </div>
+            <div>
+                <p>Mua kèm tiết kiệm hơn</p>
+                <a href="#">chọn gói</a>
+            </div>
         </div>
 
+        <div class="btn-group btn-right">
+            <button type="submit" class="btn-checkout" form="cart-form" aria-label="Thanh toán các sản phẩm đã chọn">Mua
+                ngay</button>
+        </div>
+
+
+        <div class="total-section">
+            <p>Tạm tính: <span class="total-amount" id="total-amount">0₫</span></p>
+        </div>
         {% else %}
         <p class="empty-cart">Giỏ hàng của bạn đang trống.</p>
         {% endif %}
     </div>
 
     <script>
-        // Tự động ẩn flash message sau 3 giây
-        window.onload = function () {
-            const flash = document.getElementById("flash");
-            if (flash) {
-                setTimeout(() => {
-                    flash.style.display = 'none';
-                }, 3000);
-            }
-        };
-        // Xác nhận thanh toán
-        function confirmCheckout() {
-            const isLoggedIn = "{{ session.username | default('') }}" !== "";
-            if (!isLoggedIn) {
-                alert("Bạn cần đăng nhập để thanh toán.");
-                window.location.href = "/login";
-                return false;
-            } else {
-                return confirm("Bạn có chắc muốn thanh toán?");
-            }
+        // Tính tổng tiền
+        function updateTotal() {
+            let total = 0;
+            document.querySelectorAll('.total-price').forEach(price => {
+                total += parseInt(price.textContent.replace(/[^0-9]/g, '')) || 0;
+            });
+            document.getElementById('total-amount').textContent = new Intl.NumberFormat('vi-VN').format(total) + '₫';
         }
-        
+
+        // Cập nhật tổng tiền khi tải trang
+        window.onload = () => {
+            updateTotal();
+
+            // Chọn tất cả checkbox
+            const selectAllCheckbox = document.getElementById('select-all');
+            const itemCheckboxes = document.querySelectorAll('.select-checkbox');
+
+            selectAllCheckbox.addEventListener('change', () => {
+                itemCheckboxes.forEach(checkbox => {
+                    checkbox.checked = selectAllCheckbox.checked;
+                });
+            });
+
+            itemCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    selectAllCheckbox.checked = Array.from(itemCheckboxes).every(cb => cb.checked);
+                });
+            });
+        };
     </script>
-
-
-    
 </body>
+
 </html>

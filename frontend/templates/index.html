@@ -1,285 +1,196 @@
-<!DOCTYPE html>
-<html lang="vi">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Trang chủ</title>
-    <link rel="stylesheet" href="/static/css/style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f6f9;
-            display: flex;
-            min-height: 100vh;
-            color: #333;
-        }
-
-        .header-right {
-            position: fixed;
-            top: 15px;
-            right: 30px;
-            z-index: 1000;
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .header-right a {
-            display: inline-flex;
-            align-items: center;
-            background-color: #3498db;
-            color: white;
-            padding: 8px 14px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-
-        .header-right a:hover { background-color: #2980b9; }
-        .header-right i { margin-right: 6px; }
-
-        .sidebar {
-            width: 250px;
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            height: 100vh;
-            position: sticky;
-            top: 0;
-            padding-top: 25px;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15);
-            overflow-y: auto;
-        }
-
-        .sidebar h2 { text-align: center; margin-bottom: 20px; font-size: 1.3rem; font-weight: 600; }
-        .sidebar ul { list-style: none; padding: 0 10px; }
-        .sidebar ul li { margin-bottom: 8px; }
-        .sidebar ul li a {
-            display: block;
-            color: #bdc3c7;
-            text-decoration: none;
-            padding: 12px 20px;
-            font-size: 1rem;
-            border-radius: 8px;
-        }
-
-        .sidebar ul li a:hover,
-        .sidebar ul li a.active {
-            background-color: #3498db;
-            color: white;
-            padding-left: 25px;
-        }
-
-        .main-content {
-            flex-grow: 1;
-            padding: 60px 30px 30px;
-        }
-
-        .main-content h1 {
-            margin-bottom: 25px;
-            font-size: 2rem;
-            font-weight: 700;
-            color: #007bff;
-        }
-
-        .product-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-            gap: 25px;
-        }
-
-        .product-card {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            padding: 16px;
-            text-align: center;
-        }
-
-        .product-card img {
-            max-width: 100%;
-            height: 160px;
-            object-fit: contain;
-            margin-bottom: 12px;
-            border-radius: 6px;
-        }
-
-        .product-card h3 {
-            font-size: 1.05rem;
-            margin-bottom: 6px;
-            color: #007bff;
-        }
-
-        .product-card h3 a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .product-price {
-            font-weight: bold;
-            color: #28a745;
-            margin-bottom: 10px;
-        }
-
-        .product-actions a {
-            display: inline-block;
-            padding: 7px 14px;
-            margin: 5px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            color: white;
-        }
-
-        .add-to-cart { background-color: #007bff; }
-        .add-to-cart:hover { background-color: #0056b3; }
-        .buy-now { background-color: #28a745; }
-        .buy-now:hover { background-color: #19692c; }
-
-        .flash-message {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 10px 18px;
-            margin: 15px 0;
-            border-left: 5px solid #28a745;
-            border-radius: 5px;
-        }
-
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; position: relative; }
-            .main-content { padding: 70px 20px 20px; }
-            .header-right { position: fixed; top: 10px; right: 10px; gap: 10px; }
-            .header-right a { padding: 6px 12px; font-size: 0.85rem; }
-        }
-    </style>
-</head>
-
-<body>
-    <!-- Header nút cart + login -->
-    <div class="header-right">
-        <a href="/cart">
-        <i class="fas fa-shopping-cart"></i> Giỏ hàng
-        {% if session.username %}
-            {% set count = get_cart_count(session.ma_tai_khoan) %}
-            {% if count > 0 %}
-            <span style="background:red;color:white;padding:2px 6px;border-radius:50%;">{{ count }}</span>
-            {% endif %}
-        {% elif session.cart %}
-            <span style="background:red;color:white;padding:2px 6px;border-radius:50%;">{{ session.cart|length }}</span>
-        {% endif %}
-        </a>
-
-        {% if session.username %}
-        <a href="/logout"><i class="fas fa-sign-out-alt"></i> {{ session.username }}</a>
-        {% else %}
-        <a href="/login"><i class="fas fa-user"></i> Đăng nhập</a>
-        {% endif %}
+{% extends "layout.html" %}
+{% block content %}
+<div class="products-container" style="max-width: 1200px; margin: 0 auto;">
+    <!-- Thông báo flash -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div style="
+        background-color: #d4edda;
+        border-left: 6px solid #28a745;
+        color: #155724;
+        padding: 16px 20px;
+        margin-bottom: 30px;
+        border-radius: 6px;
+        box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+    ">
+        {% for message in messages %}
+        <p style="margin: 0;">{{ message }}</p>
+        {% endfor %}
     </div>
+    {% endif %}
+    {% endwith %}
 
-
-    <!-- Sidebar -->
- <div class="sidebar">
-    <ul id="category-list">
-        <li><a href="#" data-category="All"><i class="fas fa-home"></i> Tất cả sản phẩm</a></li>
-        <li><a href="#" data-category="Máy tính & Laptop"><i class="fas fa-laptop"></i> Máy tính & Laptop</a></li>
-        <li><a href="#" data-category="Phụ kiện máy tính"><i class="fas fa-keyboard"></i> Phụ kiện máy tính</a></li>
-        <li><a href="#" data-category="Màn hình & hiển thị"><i class="fas fa-desktop"></i> Màn hình & hiển thị</a></li>
-        <li><a href="#" data-category="Thiết bị âm thanh"><i class="fas fa-headphones"></i> Thiết bị âm thanh</a></li>
-        <li><a href="#" data-category="Thiết bị hình ảnh"><i class="fas fa-camera"></i> Thiết bị hình ảnh</a></li>
-        <li><a href="#" data-category="Mạng & kết nối"><i class="fas fa-network-wired"></i> Mạng & kết nối</a></li>
-        <li><a href="#" data-category="Cáp & sạc"><i class="fas fa-bolt"></i> Cáp & sạc</a></li>
-        <li><a href="#" data-category="Thiết bị văn phòng"><i class="fas fa-print"></i> Thiết bị văn phòng</a></li>
-    </ul>
-</div>
-
-    <!-- Nội dung chính -->
-    <!-- <div class="main-content">
-        <h1>Danh mục: {{ category if category else "All" }}</h1> -->
-        <div class="main-content">
-
-        
-
-        <h1>Danh mục: {{ category }}</h1>
-
-
-        <!-- Flash -->
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="flash-message" id="flash">
-                    {% for message in messages %}
-                        {{ message }}
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-
-        <div class="product-list" id="product-container">
-            {% for product in products %}
-            <div class="product-card">
-                <a href="/product/{{ product[0] }}">
-                    <img src="{{ product[3] }}" alt="{{ product[1] }}" />
-                </a>
-                <h3><a href="/product/{{ product[0] }}">{{ product[1] }}</a></h3>
-                <div class="product-price">{{ "{:,.0f}".format(product[2]) }}₫</div>
-                <div class="product-actions">
-                    <a href="/add_to_cart/{{ product[0] }}" class="add-to-cart">Thêm vào giỏ hàng</a>
-                    <a href="#" class="buy-now">Mua ngay</a>
+    <!-- Lưới sản phẩm -->
+    <div id="product-container" style="
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 24px;
+    ">
+        {% for product in products %}
+        <div style="
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        " onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 10px 20px rgb(0 0 0 / 0.15)';"
+            onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgb(0 0 0 / 0.1)';">
+            <a href="/product/{{ product[0] }}" style="display: block; overflow: hidden;">
+                <img src="{{ product[3] }}" alt="{{ product[1] }}" style="
+                    width: 100%;
+                    height: 180px;
+                    object-fit: cover;
+                    transition: transform 0.3s ease;
+                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='none'" />
+            </a>
+            <div style="padding: 16px;">
+                <h3 style="font-size: 1.1rem; font-weight: 600; color: #007acc; margin-bottom: 8px;">
+                    <a href="/product/{{ product[0] }}" style="text-decoration: none; color: inherit;"
+                        onmouseover="this.style.textDecoration='underline'"
+                        onmouseout="this.style.textDecoration='none'">{{ product[1] }}</a>
+                </h3>
+                <p style="color: #28a745; font-weight: 700; font-size: 1.1rem; margin-bottom: 16px;">
+                    {{ "{:,.0f}".format(product[2]) }}₫
+                </p>
+                <div style="display: flex; justify-content: space-between; gap: 10px;">
+                    <a href="/add_to_cart/{{ product[0] }}" style="
+                        flex: 1;
+                        background-color: #007acc;
+                        color: white;
+                        padding: 10px 0;
+                        border-radius: 9999px;
+                        text-align: center;
+                        font-weight: 600;
+                        text-decoration: none;
+                        box-shadow: 0 3px 8px rgb(0 122 204 / 0.6);
+                        transition: background-color 0.3s ease;
+                    " onmouseover="this.style.backgroundColor='#005fa3'"
+                        onmouseout="this.style.backgroundColor='#007acc'">
+                        Thêm vào giỏ
+                    </a>
+                    <button onclick="buyNow('{{ product[0] }}')" style="
+                        flex: 1;
+                        background-color: #28a745;
+                        color: white;
+                        padding: 10px 0;
+                        border-radius: 9999px;
+                        text-align: center;
+                        font-weight: 600;
+                        border: none;
+                        cursor: pointer;
+                        box-shadow: 0 3px 8px rgb(40 167 69 / 0.6);
+                        transition: background-color 0.3s ease;
+                    " onmouseover="this.style.backgroundColor='#1e7e34'"
+                        onmouseout="this.style.backgroundColor='#28a745'">
+                        Mua ngay
+                    </button>
                 </div>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
     </div>
+</div>
 
-    <script>
-        // Ẩn flash message sau 3 giây
-        window.onload = function () {
-            const flash = document.getElementById("flash");
-            if (flash) {
-                setTimeout(() => flash.style.display = 'none', 3000);
-            }
-        };
+<script>
+    // Xử lý load sản phẩm theo category
+    document.addEventListener("DOMContentLoaded", function () {
+        const categoryLinks = document.querySelectorAll("#category-list a");
+        const productContainer = document.getElementById("product-container");
 
-        // Ajax load sản phẩm theo danh mục
-        document.addEventListener("DOMContentLoaded", function () {
-            const categoryList = document.getElementById("category-list");
-            const productContainer = document.getElementById("product-container");
+        categoryLinks.forEach(link => {
+            link.addEventListener("click", function (e) {
+                e.preventDefault();
+                const category = this.getAttribute("data-category");
 
-            categoryList.addEventListener("click", function (e) {
-                if (e.target.tagName === "A") {
-                    e.preventDefault();
-                    const category = e.target.getAttribute("data-category");
-
-                    fetch(`/api/products?category=${encodeURIComponent(category)}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            productContainer.innerHTML = "";
-                            if (data.length === 0) {
-                                productContainer.innerHTML = "<p>Không có sản phẩm nào.</p>";
-                                return;
-                            }
-                            data.forEach(product => {
-                                const html = `
-                                <div class="product-card">
-                                    <a href="/product/${product[0]}">
-                                        <img src="${product[3]}" alt="${product[1]}" />
+                fetch(`/api/products?category=${encodeURIComponent(category)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        productContainer.innerHTML = data.length === 0
+                            ? '<p style="grid-column: 1 / -1; text-align: center; color: #666; font-style: italic;">Không có sản phẩm nào.</p>'
+                            : '';
+                        data.forEach(product => {
+                            const html = `
+                                <div style="
+                                    background: #fff;
+                                    border-radius: 12px;
+                                    box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+                                    overflow: hidden;
+                                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                                    display: flex;
+                                    flex-direction: column;
+                                    justify-content: space-between;
+                                "
+                                onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 10px 20px rgb(0 0 0 / 0.15)';"
+                                onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgb(0 0 0 / 0.1)';">
+                                    <a href="/product/${product[0]}" style="display: block; overflow: hidden;">
+                                        <img src="${product[3]}" alt="${product[1]}" style="
+                                            width: 100%;
+                                            height: 180px;
+                                            object-fit: cover;
+                                            transition: transform 0.3s ease;
+                                        " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='none'"/>
                                     </a>
-                                    <h3><a href="/product/${product[0]}">${product[1]}</a></h3>
-                                    <div class="product-price">${parseInt(product[2]).toLocaleString()}₫</div>
-                                    <div class="product-actions">
-                                        <a href="/add_to_cart/${product[0]}" class="add-to-cart">Thêm vào giỏ hàng</a>
-                                        <a href="#" class="buy-now">Mua ngay</a>
+                                    <div style="padding: 16px;">
+                                        <h3 style="font-size: 1.1rem; font-weight: 600; color: #007acc; margin-bottom: 8px;">
+                                            <a href="/product/${product[0]}" style="text-decoration: none; color: inherit;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">${product[1]}</a>
+                                        </h3>
+                                        <p style="color: #28a745; font-weight: 700; font-size: 1.1rem; margin-bottom: 16px;">
+                                            ${parseInt(product[2]).toLocaleString()}₫
+                                        </p>
+                                        <div style="display: flex; justify-content: space-between; gap: 10px;">
+                                            <a href="/add_to_cart/${product[0]}" style="
+                                                flex: 1;
+                                                background-color: #007acc;
+                                                color: white;
+                                                padding: 10px 0;
+                                                border-radius: 9999px;
+                                                text-align: center;
+                                                font-weight: 600;
+                                                text-decoration: none;
+                                                box-shadow: 0 3px 8px rgb(0 122 204 / 0.6);
+                                                transition: background-color 0.3s ease;
+                                            " onmouseover="this.style.backgroundColor='#005fa3'" onmouseout="this.style.backgroundColor='#007acc'">
+                                                Thêm vào giỏ
+                                            </a>
+                                            <button onclick="buyNow('${product[0]}')" style="
+                                                flex: 1;
+                                                background-color: #28a745;
+                                                color: white;
+                                                padding: 10px 0;
+                                                border-radius: 9999px;
+                                                text-align: center;
+                                                font-weight: 600;
+                                                border: none;
+                                                cursor: pointer;
+                                                box-shadow: 0 3px 8px rgb(40 167 69 / 0.6);
+                                                transition: background-color 0.3s ease;
+                                            " onmouseover="this.style.backgroundColor='#1e7e34'" onmouseout="this.style.backgroundColor='#28a745'">
+                                                Mua ngay
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>`;
-                                productContainer.insertAdjacentHTML("beforeend", html);
-                            });
+                            productContainer.insertAdjacentHTML("beforeend", html);
                         });
-                }
+                    });
             });
         });
-    </script>
-</body>
-</html>
+    });
+
+    // Hàm thêm sản phẩm vào giỏ rồi chuyển đến giỏ hàng
+    function buyNow(productId) {
+        fetch(`/add_to_cart/${productId}`)
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/cart'; // Chuyển thẳng đến trang giỏ hàng
+                } else {
+                    alert('Thêm sản phẩm vào giỏ thất bại!');
+                }
+            })
+            .catch(() => alert('Lỗi mạng khi thêm sản phẩm!'));
+    }
+</script>
+{% endblock %}
