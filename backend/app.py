@@ -257,12 +257,56 @@ def clear_cart():
 
 
 
+@app.route('/checkout', methods=['GET'])
+def checkout_form():
+    if 'ma_tai_khoan' not in session:
+        flash("⚠️ Vui lòng đăng nhập để thanh toán.", "warning")
+        return redirect(url_for('login'))
+
+    ma_tai_khoan = session['ma_tai_khoan']
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT g.ProductID, p.ProductName, p.Price, g.SoLuong, p.ImagePath
+        FROM GioHang g
+        JOIN Products p ON g.ProductID = p.ProductID
+        WHERE g.MaTaiKhoan = ?
+    """, (ma_tai_khoan,))
+    items = cursor.fetchall()
+    conn.close()
+
+    if not items:
+        flash("⚠️ Giỏ hàng trống.", "warning")
+        return redirect(url_for('cart'))
+
+    # Định dạng cart để truyền sang Jinja2
+    cart = []
+    for item in items:
+        cart.append({
+            'id': item[0],
+            'name': item[1],
+            'price': item[2],
+            'quantity': item[3],
+            'image': item[4]
+        })
+
+    # Tính tổng tiền
+    total = sum(i['price'] * i['quantity'] for i in cart)
+
+    # **Không load vietnam.json trong Python nữa**
+
+    return render_template('checkout.html',
+                           cart=cart,
+                           total=total)
+
+
+
+
 @app.route('/checkout', methods=['POST'])
 def checkout():
     if 'ma_tai_khoan' not in session:
-        if 'ma_tai_khoan' not in session:
-        # Luôn trả về JSON nếu là POST (AJAX)
-            return jsonify({'need_login': True, 'message': '⚠️ Vui lòng đăng nhập để thanh toán.'})
+        return jsonify({'need_login': True, 'message': '⚠️ Vui lòng đăng nhập để thanh toán.'})
 
     ma_tai_khoan = session['ma_tai_khoan']
     conn = get_connection()
@@ -290,28 +334,37 @@ def checkout():
 
     tong_tien = sum([item[1] * item[2] for item in items])
 
-    cursor.execute("INSERT INTO HoaDon (MaNguoiDung, TongTien) VALUES (?, ?)", (ma_nguoidung, tong_tien))
-    conn.commit()
+    try:
+        cursor.execute("INSERT INTO HoaDon (MaNguoiDung, TongTien) VALUES (?, ?)", (ma_nguoidung, tong_tien))
+        # Lấy ID hóa đơn vừa tạo
+        cursor.execute("SELECT @@IDENTITY")
+        ma_hoadon = int(cursor.fetchone()[0])
 
-    cursor.execute("SELECT @@IDENTITY")
-    ma_hoadon = int(cursor.fetchone()[0])
+        for product_id, don_gia, so_luong in items:
+            cursor.execute(
+                "INSERT INTO ChiTietHoaDon (MaHoaDon, ProductID, SoLuong, DonGia) VALUES (?, ?, ?, ?)",
+                (ma_hoadon, product_id, so_luong, don_gia)
+            )
+            cursor.execute(
+                "INSERT INTO LichSuMuaHang (MaTaiKhoan, ProductID, SoLuong) VALUES (?, ?, ?)",
+                (ma_tai_khoan, product_id, so_luong)
+            )
 
-    for product_id, don_gia, so_luong in items:
-        cursor.execute(
-            "INSERT INTO ChiTietHoaDon (MaHoaDon, ProductID, SoLuong, DonGia) VALUES (?, ?, ?, ?)",
-            (ma_hoadon, product_id, so_luong, don_gia)
-        )
-        cursor.execute(
-            "INSERT INTO LichSuMuaHang (MaTaiKhoan, ProductID, SoLuong) VALUES (?, ?, ?)",
-            (ma_tai_khoan, product_id, so_luong)
-        )
+        # Xóa giỏ hàng
+        cursor.execute("DELETE FROM GioHang WHERE MaTaiKhoan = ?", (ma_tai_khoan,))
 
-    cursor.execute("DELETE FROM GioHang WHERE MaTaiKhoan = ?", (ma_tai_khoan,))
-    conn.commit()
-    conn.close()
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        flash("❌ Có lỗi xảy ra khi thanh toán: " + str(e), "danger")
+        return redirect(url_for('cart'))
+    finally:
+        conn.close()
 
     flash("✅ Thanh toán thành công!", "success")
     return redirect(url_for('index'))
+
+
 
 
 @app.route('/api/search')
@@ -339,6 +392,13 @@ def inject_cart_info():
         return count
     return dict(get_cart_count=get_cart_count)
 
+def format_price(value):
+    try:
+        return "{:,.0f}".format(float(value))
+    except (ValueError, TypeError):
+        return "0"
+
+app.jinja_env.filters['format_price'] = format_price
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)

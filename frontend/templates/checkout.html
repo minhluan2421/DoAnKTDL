@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Thanh Toán - Chuyên Nghiệp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        /* --- giữ nguyên style bạn đã có --- */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+                Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background: #f9fafb;
+            margin: 0;
+            padding: 40px 10%;
+            color: #1a202c;
+        }
+
+        h2 {
+            text-align: center;
+            font-weight: 700;
+            font-size: 2.4rem;
+            color: #2d3748;
+            margin-bottom: 40px;
+            letter-spacing: 1.2px;
+        }
+
+        .checkout-container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            padding: 40px 50px;
+            display: flex;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        .cart-items {
+            flex: 1.2;
+            border-right: 1px solid #e2e8f0;
+            padding-right: 40px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #2d3748;
+            border-bottom: 2px solid #3182ce;
+            padding-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .cart-item img {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-right: 25px;
+            box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .cart-item img:hover {
+            transform: scale(1.05);
+        }
+
+        .cart-item-info p {
+            margin: 5px 0;
+            font-size: 1rem;
+        }
+
+        .cart-item-info p strong {
+            font-size: 1.1rem;
+        }
+
+        .cart-item-info .price {
+            color: #e53e3e;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .payment-info {
+            flex: 1;
+            min-width: 320px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1.8px solid #cbd5e0;
+            font-size: 1rem;
+            color: #2d3748;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="tel"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3182ce;
+            box-shadow: 0 0 8px rgba(49, 130, 206, 0.3);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .payment-methods {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .payment-method {
+            flex: 1 1 45%;
+            background: #edf2f7;
+            border-radius: 8px;
+            padding: 12px 15px;
+            cursor: pointer;
+            user-select: none;
+            font-weight: 600;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s ease, border 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .payment-method input[type="radio"] {
+            margin-right: 12px;
+            accent-color: #3182ce;
+            cursor: pointer;
+        }
+
+        .payment-method:hover {
+            background-color: #e2e8f0;
+        }
+
+        .payment-method input[type="radio"]:checked+span {
+            font-weight: 700;
+            color: #3182ce;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 15px 0;
+            margin-top: 30px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: #3182ce;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(49, 130, 206, 0.4);
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: #2c7ac9;
+        }
+
+        .total-amount {
+            margin-top: 30px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #e53e3e;
+            text-align: right;
+            border-top: 2px solid #3182ce;
+            padding-top: 15px;
+        }
+
+        .cart-items::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .cart-items::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .cart-items::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 900px) {
+            .checkout-container {
+                flex-direction: column;
+                padding: 30px 20px;
+            }
+
+            .cart-items {
+                border-right: none;
+                padding-right: 0;
+                max-height: none;
+                margin-bottom: 40px;
+            }
+
+            .payment-info {
+                min-width: 100%;
+            }
+
+            .payment-method {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Thông Tin Thanh Toán</h2>
+
+    <form class="checkout-container" method="POST" action="{{ url_for('checkout') }}">
+        <!-- Danh sách sản phẩm trong giỏ hàng -->
+        <div class="cart-items">
+
+            {% for item in cart %}
+            <div class="cart-item">
+                <img src="{{ url_for('static', filename=item.image) }}" alt="{{ item.name }}" />
+                <div class="cart-item-info">
+                    <p><strong>{{ item.name }}</strong></p>
+                    <p>Số lượng: {{ item.quantity }}</p>
+                    <p class="price">{{ item.price | format_price }} ₫</p>
+                </div>
+            </div>
+            {% else %}
+            <p>Giỏ hàng trống.</p>
+            {% endfor %}
+        </div>
+
+        <!-- Thông tin người nhận và phương thức thanh toán -->
+        <div class="payment-info">
+
+            <div class="section-title">Thông tin người nhận</div>
+
+            <div class="form-group">
+                <label for="name">Họ và tên <sup style="color:#e53e3e">*</sup></label>
+                <input type="text" id="name" name="name" placeholder="Nhập họ tên người nhận" required />
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Số điện thoại <sup style="color:#e53e3e">*</sup></label>
+                <input type="tel" id="phone" name="phone" placeholder="Nhập số điện thoại" pattern="[0-9]{9,12}"
+                    required />
+            </div>
+
+            <div class="form-group">
+                <label for="province">Tỉnh/Thành phố <sup style="color:#e53e3e">*</sup></label>
+                <input list="province-list" id="province" name="province" placeholder="Chọn hoặc nhập tỉnh/thành phố">
+                <datalist id="province-list"></datalist>
+
+            </div>
+
+            <div class="form-group">
+                <label for="district">Quận/Huyện <sup style="color:#e53e3e">*</sup></label>
+                <select id="district" name="district" required disabled>
+                    <option value="">Chọn Quận/Huyện</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="ward">Phường/Xã <sup style="color:#e53e3e">*</sup></label>
+                <select id="ward" name="ward" required disabled>
+                    <option value="">Chọn Phường/Xã</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Số nhà, tên đường <sup style="color:#e53e3e">*</sup></label>
+                <input type="text" id="address" name="address" placeholder="Nhập số nhà, tên đường" required />
+            </div>
+
+            <div class="section-title">Phương thức thanh toán</div>
+
+            <div class="payment-methods">
+                <label class="payment-method">
+                    <input type="radio" name="payment_method" value="vnpay" required />
+                    <span><i class="fa-brands fa-vn-pay"></i> VNPay</span>
+                </label>
+                <label class="payment-method">
+                    <input type="radio" name="payment_method" value="momo" />
+                    <span><i class="fa-brands fa-microsoft"></i> MoMo</span>
+                </label>
+                <label class="payment-method">
+                    <input type="radio" name="payment_method" value="bank" />
+                    <span><i class="fa-solid fa-university"></i> Ngân hàng</span>
+                </label>
+                <label class="payment-method">
+                    <input type="radio" name="payment_method" value="cod" />
+                    <span><i class="fa-solid fa-truck"></i> Thanh toán khi nhận hàng</span>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="note">Ghi chú</label>
+                <textarea id="note" name="note" placeholder="Nhập ghi chú (nếu có)"></textarea>
+            </div>
+
+            <div class="total-amount">
+                Tổng cộng: {{ total | format_price }} ₫
+            </div>
+
+            <button type="submit" class="btn-submit">Xác nhận thanh toán</button>
+        </div>
+
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let provinces = [];
+            const provinceInput = document.getElementById('province'); // input list thay select
+            const provinceDatalist = document.getElementById('province-list');
+            const districtSelect = document.getElementById('district');
+            const wardSelect = document.getElementById('ward');
+
+            districtSelect.disabled = true;
+            wardSelect.disabled = true;
+
+            fetch('/static/vietnam.json')
+                .then(response => response.json())
+                .then(data => {
+                    provinces = data;
+                    provinces.forEach(province => {
+                        const option = document.createElement('option');
+                        option.value = province.name;  // Giá trị hiển thị và nhập là tên tỉnh
+                        provinceDatalist.appendChild(option);
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+
+            provinceInput.addEventListener('change', () => {
+                // Khi người dùng chọn hoặc nhập tên tỉnh/thành phố
+                const selectedProvinceName = provinceInput.value.trim();
+                districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện</option>';
+                wardSelect.innerHTML = '<option value="">Chọn Phường/Xã</option>';
+                wardSelect.disabled = true;
+
+                if (!selectedProvinceName) {
+                    districtSelect.disabled = true;
+                    return;
+                }
+
+                const selectedProvince = provinces.find(p => p.name.toLowerCase() === selectedProvinceName.toLowerCase());
+                if (!selectedProvince) {
+                    districtSelect.disabled = true;
+                    return;
+                }
+
+                districtSelect.disabled = false;
+                selectedProvince.districts.forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district.code;
+                    option.textContent = district.name;
+                    districtSelect.appendChild(option);
+                });
+            });
+
+            districtSelect.addEventListener('change', () => {
+                const selectedProvinceName = provinceInput.value.trim();
+                const selectedDistrictCode = parseInt(districtSelect.value);
+                wardSelect.innerHTML = '<option value="">Chọn Phường/Xã</option>';
+
+                if (!selectedDistrictCode) {
+                    wardSelect.disabled = true;
+                    return;
+                }
+
+                const selectedProvince = provinces.find(p => p.name.toLowerCase() === selectedProvinceName.toLowerCase());
+                if (!selectedProvince) return;
+
+                const selectedDistrict = selectedProvince.districts.find(d => d.code === selectedDistrictCode);
+                if (selectedDistrict && selectedDistrict.wards) {
+                    wardSelect.disabled = false;
+                    selectedDistrict.wards.forEach(ward => {
+                        const option = document.createElement('option');
+                        option.value = ward.code;
+                        option.textContent = ward.name;
+                        wardSelect.appendChild(option);
+                    });
+                } else {
+                    wardSelect.disabled = true;
+                }
+            });
+        });
+
+
+    </script>
+
+</body>
+
+</html>
