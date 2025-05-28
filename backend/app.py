@@ -1,7 +1,22 @@
 from flask import Flask, render_template, session, redirect, url_for, request, flash, jsonify
 from database.db_connection import get_products, get_products_by_category, get_product_by_id, get_connection
 from database.data_processing import load_transactions, preprocess_data
-from analysis.apriori_analysis import run_apriori
+
+import pandas as pd
+import ast
+
+# Đọc luật từ file CSV (chỉ cần đọc 1 lần khi app khởi động)
+rules = pd.read_csv('data/rules.csv')
+rules['antecedents'] = rules['antecedents'].apply(ast.literal_eval)
+rules['consequents'] = rules['consequents'].apply(ast.literal_eval)
+
+def get_recommendations(product_id):
+    recs = []
+    for _, row in rules.iterrows():
+        if product_id in row['antecedents']:
+            recs.extend(row['consequents'])
+    # Loại bỏ trùng lặp
+    return list(set(recs))
 
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 app.secret_key = 'your-secret-key'
@@ -102,7 +117,11 @@ def api_products():
 def product_detail(product_id):
     product = get_product_by_id(product_id)
     if product:
-        return render_template('product_detail.html', product=product)
+        # Lấy danh sách sản phẩm gợi ý
+        recommendations = get_recommendations(product_id)
+        # Lấy thông tin chi tiết các sản phẩm gợi ý
+        recommended_products = [get_product_by_id(pid) for pid in recommendations]
+        return render_template('product_detail.html', product=product, recommendations=recommended_products)
     else:
         return "Product not found", 404
 
