@@ -208,24 +208,22 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <ul id="category-list">
-            <li><a href="{{ url_for('index') }}" data-category="All"><i class="fas fa-home"></i> Trang chủ</a></li>
-            <li><a href="{{ url_for('products', category='Máy tính & Laptop') }}" data-category="Máy tính & Laptop"><i
-                        class="fas fa-laptop"></i> Máy tính & Laptop</a></li>
-            <li><a href="{{ url_for('products', category='Phụ kiện máy tính') }}" data-category="Phụ kiện máy tính"><i
-                        class="fas fa-keyboard"></i> Phụ kiện máy tính</a></li>
-            <li><a href="{{ url_for('products', category='Màn hình & hiển thị') }}"
-                    data-category="Màn hình & hiển thị"><i class="fas fa-desktop"></i> Màn hình & hiển thị</a></li>
-            <li><a href="{{ url_for('products', category='Thiết bị âm thanh') }}" data-category="Thiết bị âm thanh"><i
-                        class="fas fa-headphones"></i> Thiết bị âm thanh</a></li>
-            <li><a href="{{ url_for('products', category='Thiết bị hình ảnh') }}" data-category="Thiết bị hình ảnh"><i
-                        class="fas fa-camera"></i> Thiết bị hình ảnh</a></li>
-            <li><a href="{{ url_for('products', category='Mạng & kết nối') }}" data-category="Mạng & kết nối"><i
-                        class="fas fa-network-wired"></i> Mạng & kết nối</a></li>
-            <li><a href="{{ url_for('products', category='Cáp & sạc') }}" data-category="Cáp & sạc"><i
-                        class="fas fa-bolt"></i> Cáp & sạc</a></li>
-            <li><a href="{{ url_for('products', category='Thiết bị văn phòng') }}" data-category="Thiết bị văn phòng"><i
-                        class="fas fa-print"></i> Thiết bị văn phòng</a></li>
-        </ul>
+    <li><a href="{{ url_for('index') }}" data-category="All"><i class="fas fa-home"></i> Trang chủ</a></li>
+    <li><a href="{{ url_for('products', category='Laptop') }}" data-category="Laptop"><i class="fas fa-laptop"></i> Laptop</a></li>
+    <li><a href="{{ url_for('products', category='Desktop') }}" data-category="Desktop"><i class="fas fa-desktop"></i> Máy tính để bàn</a></li>
+    <li><a href="{{ url_for('products', category='Monitors') }}" data-category="Monitors"><i class="fas fa-tv"></i> Màn hình</a></li>
+    <li><a href="{{ url_for('products', category='Computer Mice') }}" data-category="Computer Mice"><i class="fas fa-mouse"></i> Chuột máy tính</a></li>
+    <li><a href="{{ url_for('products', category='Keyboard') }}" data-category="Keyboard"><i class="fas fa-keyboard"></i> Bàn phím</a></li>
+    <li><a href="{{ url_for('products', category='Mouse and Keyboard Combo') }}" data-category="Mouse and Keyboard Combo"><i class="fas fa-keyboard"></i> Bộ chuột & bàn phím</a></li>
+    <li><a href="{{ url_for('products', category='Computer Headphones') }}" data-category="Computer Headphones"><i class="fas fa-headphones"></i> Tai nghe máy tính</a></li>
+    <li><a href="{{ url_for('products', category='Computer Cords') }}" data-category="Computer Cords"><i class="fas fa-usb"></i> Dây cáp máy tính</a></li>
+    <li><a href="{{ url_for('products', category='Accessories') }}" data-category="Accessories"><i class="fas fa-plug"></i> Phụ kiện</a></li>
+    <li><a href="{{ url_for('products', category='Speakers') }}" data-category="Speakers"><i class="fas fa-volume-up"></i> Loa</a></li>
+    <li><a href="{{ url_for('products', category='Printers') }}" data-category="Printers"><i class="fas fa-print"></i> Máy in</a></li>
+    <li><a href="{{ url_for('products', category='Computer Stands') }}" data-category="Computer Stands"><i class="fas fa-border-all"></i> Giá đỡ máy tính</a></li>
+    <li><a href="{{ url_for('products', category='External Hardrives') }}" data-category="External Hardrives"><i class="fas fa-hdd"></i> Ổ cứng di động</a></li>
+    <li><a href="{{ url_for('products', category='Smart Home Devices') }}" data-category="Smart Home Devices"><i class="fas fa-home"></i> Thiết bị nhà thông minh</a></li>
+</ul>
     </div>
 
     <!-- Header top: thanh tìm kiếm ở giữa, giỏ hàng + đăng nhập bên phải -->
