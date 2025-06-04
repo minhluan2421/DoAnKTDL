@@ -208,45 +208,79 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <ul id="category-list">
-    <li><a href="{{ url_for('index') }}" data-category="All"><i class="fas fa-home"></i> Trang chủ</a></li>
-    <li><a href="{{ url_for('products', category='Laptop') }}" data-category="Laptop"><i class="fas fa-laptop"></i> Laptop</a></li>
-    <li><a href="{{ url_for('products', category='Desktop') }}" data-category="Desktop"><i class="fas fa-desktop"></i> Máy tính để bàn</a></li>
-    <li><a href="{{ url_for('products', category='Monitors') }}" data-category="Monitors"><i class="fas fa-tv"></i> Màn hình</a></li>
-    <li><a href="{{ url_for('products', category='Computer Mice') }}" data-category="Computer Mice"><i class="fas fa-mouse"></i> Chuột máy tính</a></li>
-    <li><a href="{{ url_for('products', category='Keyboard') }}" data-category="Keyboard"><i class="fas fa-keyboard"></i> Bàn phím</a></li>
-    <li><a href="{{ url_for('products', category='Mouse and Keyboard Combo') }}" data-category="Mouse and Keyboard Combo"><i class="fas fa-keyboard"></i> Bộ chuột & bàn phím</a></li>
-    <li><a href="{{ url_for('products', category='Computer Headphones') }}" data-category="Computer Headphones"><i class="fas fa-headphones"></i> Tai nghe máy tính</a></li>
-    <li><a href="{{ url_for('products', category='Computer Cords') }}" data-category="Computer Cords"><i class="fas fa-usb"></i> Dây cáp máy tính</a></li>
-    <li><a href="{{ url_for('products', category='Accessories') }}" data-category="Accessories"><i class="fas fa-plug"></i> Phụ kiện</a></li>
-    <li><a href="{{ url_for('products', category='Speakers') }}" data-category="Speakers"><i class="fas fa-volume-up"></i> Loa</a></li>
-    <li><a href="{{ url_for('products', category='Printers') }}" data-category="Printers"><i class="fas fa-print"></i> Máy in</a></li>
-    <li><a href="{{ url_for('products', category='Computer Stands') }}" data-category="Computer Stands"><i class="fas fa-border-all"></i> Giá đỡ máy tính</a></li>
-    <li><a href="{{ url_for('products', category='External Hardrives') }}" data-category="External Hardrives"><i class="fas fa-hdd"></i> Ổ cứng di động</a></li>
-    <li><a href="{{ url_for('products', category='Smart Home Devices') }}" data-category="Smart Home Devices"><i class="fas fa-home"></i> Thiết bị nhà thông minh</a></li>
-</ul>
+            <li><a href="{{ url_for('index') }}" data-category="All"><i class="fas fa-home"></i> Trang chủ</a></li>
+            <li><a href="{{ url_for('products', category='Laptop') }}" data-category="Laptop"><i
+                        class="fas fa-laptop"></i> Laptop</a></li>
+            <li><a href="{{ url_for('products', category='Desktop') }}" data-category="Desktop"><i
+                        class="fas fa-desktop"></i> Máy tính để bàn</a></li>
+            <li><a href="{{ url_for('products', category='Monitors') }}" data-category="Monitors"><i
+                        class="fas fa-tv"></i> Màn hình</a></li>
+            <li><a href="{{ url_for('products', category='Computer Mice') }}" data-category="Computer Mice"><i
+                        class="fas fa-mouse"></i> Chuột máy tính</a></li>
+            <li><a href="{{ url_for('products', category='Keyboard') }}" data-category="Keyboard"><i
+                        class="fas fa-keyboard"></i> Bàn phím</a></li>
+            <li><a href="{{ url_for('products', category='Mouse and Keyboard Combo') }}"
+                    data-category="Mouse and Keyboard Combo"><i class="fas fa-keyboard"></i> Bộ chuột & bàn phím</a>
+            </li>
+            <li><a href="{{ url_for('products', category='Computer Headphones') }}"
+                    data-category="Computer Headphones"><i class="fas fa-headphones"></i> Tai nghe máy tính</a></li>
+            <li><a href="{{ url_for('products', category='Computer Cords') }}" data-category="Computer Cords"><i
+                        class="fas fa-usb"></i> Dây cáp máy tính</a></li>
+            <li><a href="{{ url_for('products', category='Accessories') }}" data-category="Accessories"><i
+                        class="fas fa-plug"></i> Phụ kiện</a></li>
+            <li><a href="{{ url_for('products', category='Speakers') }}" data-category="Speakers"><i
+                        class="fas fa-volume-up"></i> Loa</a></li>
+            <li><a href="{{ url_for('products', category='Printers') }}" data-category="Printers"><i
+                        class="fas fa-print"></i> Máy in</a></li>
+            <li><a href="{{ url_for('products', category='Computer Stands') }}" data-category="Computer Stands"><i
+                        class="fas fa-border-all"></i> Giá đỡ máy tính</a></li>
+            <li><a href="{{ url_for('products', category='External Hardrives') }}" data-category="External Hardrives"><i
+                        class="fas fa-hdd"></i> Ổ cứng di động</a></li>
+            <li><a href="{{ url_for('products', category='Smart Home Devices') }}" data-category="Smart Home Devices"><i
+                        class="fas fa-home"></i> Thiết bị nhà thông minh</a></li>
+        </ul>
     </div>
 
     <!-- Header top: thanh tìm kiếm ở giữa, giỏ hàng + đăng nhập bên phải -->
-    <div class="header-top">
-        <!-- Thanh tìm kiếm -->
-        <div class="header-search">
-            <form id="search-form" autocomplete="off">
-                <input type="text" name="q" id="search-input" placeholder="Tìm kiếm sản phẩm..." required />
-                <button type="submit"><i class="fas fa-search"></i></button>
-            </form>
-        </div>
-
-        <!-- Giỏ hàng và Đăng nhập/Đăng xuất -->
-        <div class="header-right">
-            <a href="/cart"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a>
-            {% if session.username %}
-            <a href="/logout"><i class="fas fa-sign-out-alt"></i> {{ session.username }}</a>
-            {% else %}
-            <a href="/login"><i class="fas fa-user"></i> Đăng nhập</a>
-            {% endif %}
+    <div class="header-top" style="background: #fff; box-shadow: 0 2px 12px #007acc11; padding: 0;">
+        <div
+            style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 18px 24px;">
+            <!-- Logo -->
+            <a href="/"
+                style="font-size: 1.6rem; font-weight: 800; color: #007acc; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; text-decoration: none;">
+                <i class="fas fa-laptop-code"></i> Shop Công Nghệ
+            </a>
+            <!-- Search -->
+            <div class="header-search" style="flex: 1; margin: 0 36px;">
+                <form id="search-form" autocomplete="off" style="display: flex; width: 100%;">
+                    <input type="text" name="q" id="search-input" placeholder="Tìm kiếm sản phẩm..." required
+                        style="flex: 1; padding: 10px 16px; border: 1.5px solid #d0d7e2; border-radius: 8px 0 0 8px; font-size: 1rem; outline: none;" />
+                    <button type="submit"
+                        style="padding: 0 18px; background: #007acc; color: #fff; border: none; border-radius: 0 8px 8px 0; font-size: 1.1rem; cursor: pointer;">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+            <!-- Actions -->
+            <div class="header-actions" style="display: flex; align-items: center; gap: 18px;">
+                <a href="/cart"
+                    style="background: #f3f8ff; color: #007acc; font-weight: 700; display: flex; align-items: center; gap: 7px; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 1.05rem;">
+                    <i class="fas fa-shopping-cart"></i> Giỏ hàng
+                </a>
+                {% if session.username %}
+                <a href="/logout"
+                    style="background: #eaf6f0; color: #28a745; display: flex; align-items: center; gap: 7px; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.05rem;">
+                    <i class="fas fa-user"></i> {{ session.username }}
+                </a>
+                {% else %}
+                <a href="/login"
+                    style="background: #eaf6f0; color: #28a745; display: flex; align-items: center; gap: 7px; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.05rem;">
+                    <i class="fas fa-user"></i> Đăng nhập
+                </a>
+                {% endif %}
+            </div>
         </div>
     </div>
-
     <!-- Main content -->
     <div class="main-content">
         {% with messages = get_flashed_messages() %}
@@ -272,21 +306,21 @@
         };
     </script>
 
-<script>
-document.getElementById('search-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const q = document.getElementById('search-input').value.trim();
-    const productContainer = document.getElementById('product-container');
-    if (!q) return;
-    fetch(`/api/search?q=${encodeURIComponent(q)}`)
-        .then(res => res.json())
-        .then(data => {
-            if (productContainer) {
-                productContainer.innerHTML = data.length === 0
-                    ? '<p style="grid-column: 1 / -1; text-align: center; color: #666; font-style: italic;">Không tìm thấy sản phẩm phù hợp.</p>'
-                    : '';
-                data.forEach(product => {
-                    const html = `
+    <script>
+        document.getElementById('search-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const q = document.getElementById('search-input').value.trim();
+            const productContainer = document.getElementById('product-container');
+            if (!q) return;
+            fetch(`/api/search?q=${encodeURIComponent(q)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (productContainer) {
+                        productContainer.innerHTML = data.length === 0
+                            ? '<p style="grid-column: 1 / -1; text-align: center; color: #666; font-style: italic;">Không tìm thấy sản phẩm phù hợp.</p>'
+                            : '';
+                        data.forEach(product => {
+                            const html = `
                     <div style="
                         background: #fff;
                         border-radius: 12px;
@@ -347,15 +381,15 @@ document.getElementById('search-form').addEventListener('submit', function(e) {
                             </div>
                         </div>
                     </div>`;
-                    productContainer.insertAdjacentHTML("beforeend", html);
+                            productContainer.insertAdjacentHTML("beforeend", html);
+                        });
+                    } else {
+                        // Nếu không ở trang index, chuyển hướng sang trang kết quả tìm kiếm (nếu muốn)
+                        window.location.href = `/search?q=${encodeURIComponent(q)}`;
+                    }
                 });
-            } else {
-                // Nếu không ở trang index, chuyển hướng sang trang kết quả tìm kiếm (nếu muốn)
-                window.location.href = `/search?q=${encodeURIComponent(q)}`;
-            }
         });
-});
-</script>
+    </script>
 
 </body>
 

@@ -116,14 +116,11 @@ def api_products():
 @app.route('/product/<int:product_id>')
 def product_detail(product_id):
     product = get_product_by_id(product_id)
-    if product:
-        # Lấy danh sách sản phẩm gợi ý
-        recommendations = get_recommendations(product_id)
-        # Lấy thông tin chi tiết các sản phẩm gợi ý
-        recommended_products = [get_product_by_id(pid) for pid in recommendations]
-        return render_template('product_detail.html', product=product, recommendations=recommended_products)
-    else:
-        return "Product not found", 404
+    recommendations = get_recommendations(product_id)
+    # Lọc bỏ sản phẩm không tồn tại
+    recommended_products = [get_product_by_id(pid) for pid in recommendations]
+    recommended_products = [rec for rec in recommended_products if rec is not None]
+    return render_template('product_detail.html', product=product, recommendations=recommended_products)
 
 
 def add_product_to_cart(product_id, quantity=1):
@@ -364,10 +361,7 @@ def checkout():
                 "INSERT INTO ChiTietHoaDon (MaHoaDon, ProductID, SoLuong, DonGia) VALUES (?, ?, ?, ?)",
                 (ma_hoadon, product_id, so_luong, don_gia)
             )
-            cursor.execute(
-                "INSERT INTO LichSuMuaHang (MaTaiKhoan, ProductID, SoLuong) VALUES (?, ?, ?)",
-                (ma_tai_khoan, product_id, so_luong)
-            )
+            
 
         # Xóa giỏ hàng
         cursor.execute("DELETE FROM GioHang WHERE MaTaiKhoan = ?", (ma_tai_khoan,))

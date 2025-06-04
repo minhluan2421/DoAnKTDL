@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8" />
@@ -7,193 +7,214 @@
     <title>{{ product[1] }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
-        /* Reset */
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-        }
-
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #fafafa;
+            background: #f5f7fa;
             color: #222;
-            line-height: 1.5;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0 20px 40px;
         }
 
-        header {
+        .header-main {
             width: 100%;
+            background: #fff;
+            box-shadow: 0 2px 12px #007acc11;
+            padding: 0 0 0 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
             max-width: 1200px;
-            padding: 20px 0;
+            margin: 0 auto;
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            background-color: #0056b3;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 86, 179, 0.4);
-            color: white;
-            user-select: none;
+            padding: 18px 24px;
         }
 
-        .btn-back {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #007acc;
+            letter-spacing: 1px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 14px;
-            border-radius: 8px;
-            background: rgba(255 255 255 / 0.15);
-            transition: background 0.3s ease;
-        }
-
-        .btn-back:hover {
-            background: rgba(255 255 255 / 0.3);
-        }
-
-        .cart-link {
-            position: relative;
-            color: white;
-            font-weight: 600;
-            font-size: 1rem;
+            gap: 10px;
             text-decoration: none;
+        }
+
+        .header-search {
+            flex: 1;
+            margin: 0 36px;
+        }
+
+        .header-search form {
+            display: flex;
+            width: 100%;
+        }
+
+        .header-search input[type="text"] {
+            flex: 1;
+            padding: 10px 16px;
+            border: 1.5px solid #d0d7e2;
+            border-radius: 8px 0 0 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .header-search input[type="text"]:focus {
+            border-color: #007acc;
+        }
+
+        .header-search button {
+            padding: 0 18px;
+            background: #007acc;
+            color: #fff;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .header-search button:hover {
+            background: #005fa3;
+        }
+
+        .header-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 14px;
+            gap: 18px;
+        }
+
+        .header-actions a {
+            color: #222;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 16px;
             border-radius: 8px;
-            background: rgba(255 255 255 / 0.15);
-            transition: background 0.3s ease;
+            transition: background 0.2s, color 0.2s;
         }
 
-        .cart-link:hover {
-            background: rgba(255 255 255 / 0.3);
-        }
-
-        .cart-count {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            background: #ff4c4c;
-            color: white;
-            font-size: 0.75rem;
+        .header-actions a.cart-link {
+            background: #f3f8ff;
+            color: #007acc;
             font-weight: 700;
-            padding: 2px 7px;
-            border-radius: 50%;
-            line-height: 1;
-            user-select: none;
-            box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
         }
 
-        main.product-detail {
+        .header-actions a.cart-link:hover {
+            background: #007acc;
+            color: #fff;
+        }
+
+        .header-actions a.login-link {
+            background: #eaf6f0;
+            color: #28a745;
+        }
+
+        .header-actions a.login-link:hover {
+            background: #28a745;
+            color: #fff;
+        }
+
+        .container {
             max-width: 1200px;
-            width: 100%;
-            margin-top: 40px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgb(0 0 0 / 0.1);
+            margin: 40px auto 0 auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(0, 86, 179, 0.10);
+            padding: 40px 32px 32px 32px;
         }
 
-        /* Responsive for mobile */
-        @media (max-width: 900px) {
-            main.product-detail {
-                grid-template-columns: 1fr;
-                padding: 30px 20px;
-                gap: 30px;
-            }
+        .breadcrumb {
+            font-size: 0.98rem;
+            color: #888;
+            margin-bottom: 18px;
         }
 
-        .info-header {
-            grid-column: 1 / -1;
-            font-size: 2rem;
-            font-weight: 700;
-            color: #0056b3;
-            margin-bottom: 30px;
-            user-select: text;
+        .breadcrumb a {
+            color: #007acc;
+            text-decoration: none;
         }
 
-        .image-container {
-            width: 100%;
-            max-width: 550px;
-            aspect-ratio: 1 / 1;
-            overflow: hidden;
-            border-radius: 24px;
-            box-shadow: 0 12px 40px rgb(0 86 179 / 0.2);
-            cursor: zoom-in;
-            background: #f8f8f8;
-            transition: transform 0.3s ease;
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .product-detail-flex {
             display: flex;
-            align-items: center;
-            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
         }
 
-        .image-container:hover {
-            transform: scale(1.05);
-        }
-
-        .image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 24px;
-        }
-
-        .product-info {
+        .image-block {
+            flex: 1 1 350px;
+            max-width: 420px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
-            gap: 24px;
+            align-items: center;
         }
 
-        .product-info h1 {
+        .main-image {
+            width: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px #007acc22;
+            background: #f8fafd;
+            object-fit: contain;
+            margin-bottom: 18px;
+            transition: transform 0.3s;
+        }
+
+        .main-image:hover {
+            transform: scale(1.04);
+        }
+
+        .product-info-block {
+            flex: 2 1 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .product-title {
             font-size: 2.2rem;
-            color: #003a94;
             font-weight: 700;
-            line-height: 1.15;
-            user-select: text;
-            margin-bottom: 6px;
+            color: #003a94;
+            margin-bottom: 8px;
         }
 
-        .price {
-            font-size: 1.9rem;
+        .product-price {
+            font-size: 2rem;
             color: #28a745;
             font-weight: 700;
-            letter-spacing: 0.03em;
-            user-select: text;
+            margin-bottom: 12px;
         }
 
-        .description {
-            font-size: 1.1rem;
+        .product-description {
+            font-size: 1.13rem;
             color: #444;
-            line-height: 1.6;
-            white-space: pre-wrap;
-            flex-grow: 1;
+            line-height: 1.7;
+            margin-bottom: 18px;
         }
 
-        /* Quantity input */
         .quantity-group {
             display: flex;
             align-items: center;
             gap: 12px;
-            max-width: 180px;
+            margin-bottom: 18px;
         }
 
         .quantity-group label {
             font-weight: 600;
             font-size: 1rem;
-            user-select: none;
             min-width: 80px;
         }
 
@@ -205,22 +226,19 @@
             font-size: 1rem;
             text-align: center;
             outline-offset: 2px;
-            transition: border-color 0.2s ease;
+            transition: border-color 0.2s;
         }
 
         .quantity-group input[type="number"]:focus {
-            border-color: #0056b3;
+            border-color: #007acc;
         }
 
-        /* Buttons container */
         .buttons {
             display: flex;
-            gap: 20px;
+            gap: 18px;
             flex-wrap: wrap;
-            margin-top: 10px;
         }
 
-        /* Button base style */
         .btn {
             display: flex;
             align-items: center;
@@ -234,136 +252,219 @@
             color: white;
             box-shadow: 0 6px 18px rgb(0 0 0 / 0.12);
             user-select: none;
-            transition: background-color 0.3s ease, transform 0.15s ease;
+            transition: background-color 0.3s, transform 0.15s;
             text-decoration: none;
             justify-content: center;
             min-width: 160px;
         }
 
-        .btn:hover {
-            transform: scale(1.07);
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        /* Add to cart button */
-        .add-to-cart {
+        .btn.add-to-cart {
             background: linear-gradient(90deg, #28a745, #1e7e34);
-            box-shadow: 0 6px 18px rgb(40 167 69 / 0.6);
-            border: none;
         }
 
-        .add-to-cart:hover {
+        .btn.add-to-cart:hover {
             background: linear-gradient(90deg, #1e7e34, #145c23);
-            box-shadow: 0 8px 26px rgb(30 126 52 / 0.8);
+            transform: scale(1.05);
         }
 
-        /* Buy Now button */
-        .buy-now {
+        .btn.buy-now {
             background: linear-gradient(90deg, #0066ff, #004bbd);
-            box-shadow: 0 6px 18px rgb(0 102 255 / 0.6);
-            border: none;
         }
 
-        .buy-now:hover {
+        .btn.buy-now:hover {
             background: linear-gradient(90deg, #004bbd, #003a94);
-            box-shadow: 0 8px 26px rgb(0 75 189 / 0.8);
+            transform: scale(1.05);
         }
 
-        /* Icon size in buttons */
         .btn i {
             font-size: 1.3rem;
+        }
+
+        /* Gợi ý sản phẩm */
+        .suggested-section {
+            margin-top: 48px;
+        }
+
+        .suggested-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #007acc;
+            margin-bottom: 22px;
+            letter-spacing: 0.01em;
+        }
+
+        .suggested-list {
+            display: flex;
+            gap: 28px;
+            flex-wrap: wrap;
+        }
+
+        .suggest-card {
+            width: 210px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px #007acc11;
+            padding: 18px 14px 14px 14px;
+            text-align: center;
+            transition: box-shadow 0.2s, transform 0.2s;
+            border: 1.5px solid #e6eaf0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .suggest-card:hover {
+            box-shadow: 0 8px 32px #007acc33;
+            transform: translateY(-6px) scale(1.03);
+            border-color: #007acc44;
+        }
+
+        .suggest-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #0001;
+            margin-bottom: 10px;
+            background: #f8fafd;
+        }
+
+        .suggest-card .suggest-name {
+            font-weight: 600;
+            margin: 10px 0 4px;
+            font-size: 1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        .suggest-card .suggest-price {
+            color: #28a745;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .suggest-card .suggest-link {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 6px 18px;
+            background: #007acc;
+            color: #fff;
+            border-radius: 999px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .suggest-card .suggest-link:hover {
+            background: #005fa3;
+        }
+
+        @media (max-width: 900px) {
+
+            .header-content,
+            .container {
+                padding: 12px 6px;
+            }
+
+            .product-detail-flex {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .image-block,
+            .product-info-block {
+                max-width: 100%;
+            }
+
+            .suggested-list {
+                gap: 14px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <header>
-        <a href="/" class="btn-back" title="Quay lại trang chủ">
-            <i class="fas fa-arrow-left"></i> Quay lại
-        </a>
-
-        <a href="/cart" class="cart-link" title="Giỏ hàng">
-            <i class="fas fa-shopping-cart"></i> Giỏ hàng
-            {% if session.cart %}
-            <span class="cart-count">{{ session.cart|length }}</span>
-            {% endif %}
-        </a>
-    </header>
-
-    <main class="product-detail" role="main" aria-label="Chi tiết sản phẩm">
-        <div class="info-header">Thông tin sản phẩm</div>
-
-        <div class="image-container" aria-label="Hình ảnh sản phẩm">
-            <img src="{{ url_for('static', filename=product[3]) }}" alt="{{ product[1] }}" />
+    <div class="header-main">
+        <div class="header-content">
+            <a href="/" class="logo"><i class="fas fa-laptop-code"></i> Shop Công Nghệ</a>
+            <div class="header-search" style="flex: 1; margin: 0 36px;">
+                <form id="search-form" autocomplete="off" style="display: flex; width: 100%;">
+                    <input type="text" name="q" id="search-input" placeholder="Tìm kiếm sản phẩm..." required
+                        style="flex: 1; padding: 10px 16px; border: 1.5px solid #d0d7e2; border-radius: 8px 0 0 8px; font-size: 1rem; outline: none;" />
+                    <button type="submit"
+                        style="padding: 0 18px; background: #007acc; color: #fff; border: none; border-radius: 0 8px 8px 0; font-size: 1.1rem; cursor: pointer;">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+            <div class="header-actions">
+                <a href="/cart" class="cart-link"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a>
+                <a href="/login" class="login-link"><i class="fas fa-user"></i> Đăng nhập</a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/"><i class="fas fa-home"></i> Trang chủ</a>
+        </div>
+        <div class="product-detail-flex">
+            <div class="image-block">
+                <img class="main-image" src="{{ url_for('static', filename=product[3]) }}" alt="{{ product[1] }}" />
+            </div>
+            <div class="product-info-block">
+                <div class="product-title">{{ product[1] }}</div>
+                <div class="product-price">{{ "{:,.0f}".format(product[2]) }}₫</div>
+                <div class="product-description">{{ product[4] }}</div>
+                <form method="POST" action="{{ url_for('add_to_cart', product_id=product[0]) }}">
+                    <div class="quantity-group">
+                        <label for="quantity">Số lượng:</label>
+                        <input type="number" name="quantity" id="quantity" min="1" value="1" />
+                    </div>
+                    <div class="buttons">
+                        <button type="submit" class="btn add-to-cart">
+                            <i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng
+                        </button>
+                        <button type="submit" formaction="{{ url_for('buy_now', product_id=product[0]) }}"
+                            class="btn buy-now">
+                            <i class="fas fa-credit-card"></i> Mua ngay
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
 
-        <section class="product-info">
-            <h1>{{ product[1] }}</h1>
-            <p class="price">{{ "{:,.0f}".format(product[2]) }}₫</p>
-            <p class="description">{{ product[4] }}</p>
-
-            <div class="quantity-group">
-                <label for="quantity">Số lượng:</label>
-                <input type="number" name="quantity" id="quantity" min="1" value="1" />
+        {% if recommendations and recommendations|length > 0 %}
+        <div class="suggested-section">
+            <div class="suggested-title">
+                Sản phẩm gợi ý mua kèm
             </div>
-
-            <form method="POST" action="{{ url_for('add_to_cart', product_id=product[0]) }}">
-                <input type="hidden" name="quantity" id="form-quantity-add" />
-                <button type="submit" class="btn add-to-cart">
-                    <i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng
-                </button>
-            </form>
-
-            <form method="POST" action="{{ url_for('buy_now', product_id=product[0]) }}">
-                <input type="hidden" name="quantity" id="form-quantity-buy" />
-                <button type="submit" class="btn buy-now">
-                    <i class="fas fa-credit-card"></i> Mua ngay
-                </button>
-            </form>
-            {% if recommendations and recommendations|length > 0 %}
-            <h3>Sản phẩm gợi ý mua kèm:</h3>
-            <div class="product-list" style="display: flex; gap: 24px; flex-wrap: wrap;">
+            <div class="suggested-list">
                 {% for rec in recommendations %}
-                <div class="product-card"
-                    style="width: 200px; border: 1px solid #eee; border-radius: 12px; background: #fafbff; box-shadow: 0 2px 8px #0001; padding: 12px; text-align: center;">
+                <div class="suggest-card">
                     <a href="/product/{{ rec[0] }}">
-                        <img src="{{ url_for('static', filename=rec[3]) }}" alt="{{ rec[1] }}"
-                            style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px;">
-                        <div style="font-weight: 600; margin: 10px 0 4px;">{{ rec[1] }}</div>
+                        <img src="{{ url_for('static', filename=rec[3]) }}" alt="{{ rec[1] }}">
+                        <div class="suggest-name">{{ rec[1] }}</div>
                     </a>
-                    <div style="color: #28a745; font-weight: 700;">{{ "{:,.0f}".format(rec[2]) }}₫</div>
+                    <div class="suggest-price">{{ "{:,.0f}".format(rec[2]) }}₫</div>
+                    <a href="/product/{{ rec[0] }}" class="suggest-link">Xem chi tiết</a>
                 </div>
                 {% endfor %}
             </div>
-            {% endif %}
-
-            <script>
-                const quantityInput = document.getElementById("quantity");
-                const formQuantityAdd = document.getElementById("form-quantity-add");
-                const formQuantityBuy = document.getElementById("form-quantity-buy");
-
-                // Gán số lượng đúng trước khi submit form
-                document.querySelectorAll("form").forEach(form => {
-                    form.addEventListener("submit", function () {
-                        if (formQuantityAdd && form.contains(formQuantityAdd)) {
-                            formQuantityAdd.value = quantityInput.value;
-                        }
-                        if (formQuantityBuy && form.contains(formQuantityBuy)) {
-                            formQuantityBuy.value = quantityInput.value;
-                        }
-                    });
-                });
-            </script>
-
-        </section>
-    </main>
-
-
-
-
+        </div>
+        {% endif %}
+    </div>
 </body>
+<script>
+    document.getElementById('search-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const q = document.getElementById('search-input').value.trim();
+        if (!q) return;
+        window.location.href = `/api/search?q=${encodeURIComponent(q)}`;
+    });
+</script>
 
 </html>
