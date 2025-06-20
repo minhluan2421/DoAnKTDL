@@ -16,3 +16,5 @@ for idx, row in df.iterrows():
 
 # Xuất ra file Excel hoặc CSV để import vào SQL Server
 pd.DataFrame(rows).to_excel('data/chi_tiet_hoa_don.xlsx', index=False)
+
+

@@ -296,7 +296,6 @@ def checkout_form():
         flash("⚠️ Giỏ hàng trống.", "warning")
         return redirect(url_for('cart'))
 
-    # Định dạng cart để truyền sang Jinja2
     cart = []
     for item in items:
         cart.append({
@@ -307,10 +306,7 @@ def checkout_form():
             'image': item[4]
         })
 
-    # Tính tổng tiền
     total = sum(i['price'] * i['quantity'] for i in cart)
-
-    # **Không load vietnam.json trong Python nữa**
 
     return render_template('checkout.html',
                            cart=cart,
